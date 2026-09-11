@@ -72,6 +72,53 @@
     return { system: systemPrompt(course), messages: msgs };
   }
 
+  /* Per-question AI marking: strict but encouraging university marker.
+     Reply format is parseable: first line 'MARK: n/max', then short feedback. */
+  function buildMarkingPrompt(item, studentAnswer) {
+    var system = 'You are a fair but strict university marker for a Medical & Health Sciences student. ' +
+      'You are given ONE assessment item, its model answer and the student response. ' +
+      'Reply in EXACTLY this format:\nMARK: <awarded>/<max>\n' +
+      'Then 2-4 sentences: what earned marks, what was missing or wrong, and the single most useful fix. ' +
+      'Award partial credit against the model answer; never exceed the maximum; mark the science strictly.';
+    var q = 'Question (' + item.marks + ' marks): ' + item.question + '\n';
+    if (item.options && item.options.length) {
+      q += 'Options: ' + item.options.map(function (o, i) { return String.fromCharCode(65 + i) + ') ' + o; }).join('  ') + '\n';
+      q += 'Correct option: ' + String.fromCharCode(65 + item.answer) + '\n';
+    } else {
+      q += 'Model answer: ' + item.answer + '\n';
+    }
+    q += '\nStudent response:\n' + (String(studentAnswer || '').trim() || '(no answer written)');
+    return { system: system, messages: [{ role: 'user', content: q }] };
+  }
+
+  /* Per-question teach-me: she is stuck and asked for help. */
+  function buildExplainPrompt(item, studentNote) {
+    var system = 'You are a university study AI for a Medical & Health Sciences student who is stuck on ONE practice item. ' +
+      'In under 160 words: (1) state the correct answer plainly, (2) explain the underlying concept in clear numbered steps, ' +
+      '(3) finish with one quick check question. Stay on this item — no broad lectures.';
+    var q = 'Item: ' + item.question + '\n';
+    if (item.options && item.options.length) {
+      q += 'Options: ' + item.options.map(function (o, i) { return String.fromCharCode(65 + i) + ') ' + o; }).join('  ') + '\n';
+      q += 'Correct option: ' + String.fromCharCode(65 + item.answer) + '\n';
+    } else {
+      q += 'Model answer: ' + item.answer + '\n';
+    }
+    if (item.explanation) q += 'Course hint: ' + item.explanation + '\n';
+    if (studentNote) q += 'Her current attempt or choice: ' + studentNote + '\n';
+    return { system: system, messages: [{ role: 'user', content: q }] };
+  }
+
+  /* Parse the first 'MARK: n/max' line of an AI marking reply -> awarded number, or null. */
+  function parseMark(text, max) {
+    var m = String(text || '').match(/MARK:\s*(\d+)\s*(?:\/\s*(\d+))?/i);
+    if (!m) return null;
+    var awarded = parseInt(m[1], 10);
+    var cap = m[2] ? parseInt(m[2], 10) : (typeof max === 'number' ? max : undefined);
+    if (typeof cap === 'number' && awarded > cap) awarded = cap;
+    if (awarded < 0) awarded = 0;
+    return awarded;
+  }
+
   function extractError(data, status) {
     var msg = data && data.error && (data.error.message || data.error.msg);
     if (!msg) msg = 'HTTP ' + status;
@@ -125,6 +172,9 @@
 
   return {
     buildMessages: buildMessages,
+    buildMarkingPrompt: buildMarkingPrompt,
+    buildExplainPrompt: buildExplainPrompt,
+    parseMark: parseMark,
     chat: chat,
     systemPrompt: systemPrompt,
     STARTERS: STARTERS,

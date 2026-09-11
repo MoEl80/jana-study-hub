@@ -144,5 +144,5 @@
   }
 
   window.JSH.ui = window.JSH.ui || {};
-  window.JSH.ui.ai = { render: render };
+  window.JSH.ui.ai = { render: render, getConfig: config };
 })();

@@ -38,6 +38,8 @@ textarea.answer { width: 100%; min-height: 90px; font: inherit; padding: 8px; bo
 .tutor-ai { background: #f1f5f9; margin-right: 15%; }
 input.tutor-key { padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px; margin: 6px 6px 6px 0; width: 260px; }
 .tutor-starters { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-feedback { background: #f5f0ff; border: 1px solid #d8b4fe; border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+.ai-feedback p { margin: 6px 0; }
 .tutor-starters .button { padding: 6px 12px; }
 .answer-space { display: none; }
 mark { background: #fef08a; }
