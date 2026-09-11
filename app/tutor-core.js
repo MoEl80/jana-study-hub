@@ -125,8 +125,10 @@
     return new Error(msg);
   }
 
-  /* config: { key, kind?, model?, endpoint? }; payload from buildMessages; fetchImpl injectable for tests. */
-  function chat(config, payload, fetchImpl) {
+  /* config: { key, kind?, model?, endpoint? }; payload from buildMessages; fetchImpl injectable for tests;
+     opts: { maxTokens?, thinking? } let bulk jobs (e.g. question generation) buy more output room. */
+  function chat(config, payload, fetchImpl, opts) {
+    opts = opts || {};
     var f = fetchImpl || (typeof fetch !== 'undefined' ? fetch : null);
     if (!f) return Promise.reject(new Error('fetch not available'));
     if (!config || !config.key) return Promise.reject(new Error('No API key configured'));
@@ -141,7 +143,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': config.key, 'anthropic-version': '2023-06-01' },
         // max effort: thinking enabled with a generous budget — smarter marking and explanations (verified live 2026-09-09)
-        body: JSON.stringify({ model: model, max_tokens: 4000, thinking: { type: 'enabled', effort: 'high', budget_tokens: 3000 }, system: payload.system, messages: payload.messages })
+        body: JSON.stringify({ model: model, max_tokens: opts.maxTokens || 4000, thinking: { type: 'enabled', effort: 'high', budget_tokens: opts.thinking || 3000 }, system: payload.system, messages: payload.messages })
       }).then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw extractError(data, res.status);

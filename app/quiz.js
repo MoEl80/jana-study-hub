@@ -1,45 +1,82 @@
-/* Practice Quiz: pick topics → answer (MCQ auto-marked; short/extended self-marked against model answer) → score saved. */
+/* Practice Quiz: pick topics → answer (MCQ auto-marked; short/extended self- or AI-marked) → score saved.
+   Sessions auto-save — navigate away and come back, you resume exactly where you left.
+   ✨ AI question generator (aiq.js) is embedded at the bottom of the picker. */
 (function () {
   'use strict';
+  var QKEY = 'jsh.quizSession.';
+
+  function loadSession(sid) {
+    try { var s = JSON.parse(localStorage.getItem(QKEY + sid) || 'null'); return s && s.ids && s.ids.length ? s : null; } catch (e) { return null; }
+  }
+  function saveSession(sid, pool, state) {
+    try { localStorage.setItem(QKEY + sid, JSON.stringify({ ids: pool.map(function (q) { return q.id; }), i: state.i, answers: state.answers, at: Date.now() })); } catch (e) {}
+  }
+  function clearSession(sid) { try { localStorage.removeItem(QKEY + sid); } catch (e) {} }
 
   function render(main, subject) {
     var app = window.JSH.app;
-    var data = app.part(subject.id, 'questions');
+    main.textContent = '';
     main.appendChild(app.el('h1', { text: '❓ ' + subject.name + ' — Practice Quiz' }));
+    var data = app.part(subject.id, 'questions');
     if (!data) { main.appendChild(app.el('p', { class: 'muted', text: 'Quiz questions are on their way.' })); return; }
-    var tids = app.topicIds(subject.id);
+    var quiz = window.JSH.aiq ? window.JSH.aiq.merged(subject.id, data.quiz) : data.quiz;
+
+    // ▶ Resume a saved session?
+    var saved = loadSession(subject.id);
+    if (saved && saved.i < saved.ids.length) {
+      var rc = app.el('section', { class: 'card' }, app.el('h2', { text: '▶ Resume your quiz' }));
+      rc.appendChild(app.el('p', { class: 'muted', text: 'You were on question ' + (saved.i + 1) + ' of ' + saved.ids.length + ' with ' + Object.keys(saved.answers || {}).length + ' answered — continue exactly where you left off.' }));
+      var res = app.el('button', { class: 'button', text: '▶ Resume' });
+      res.addEventListener('click', function () {
+        var pool = saved.ids.map(function (id) { return quiz.filter(function (q) { return q.id === id; })[0]; }).filter(Boolean);
+        run(main, subject, pool, { i: saved.i, answers: saved.answers || {} });
+      });
+      var dis = app.el('button', { class: 'button danger', text: '✕ Discard' });
+      dis.addEventListener('click', function () { clearSession(subject.id); render(main, subject); });
+      rc.appendChild(res); rc.appendChild(dis);
+      main.appendChild(rc);
+    }
+
     var chosen = {};
     var form = app.el('section', { class: 'card' }, app.el('h2', { text: 'Pick what to practise' }));
+    var tids = app.topicIds(subject.id);
     tids.forEach(function (tid) {
-      var n = data.quiz.filter(function (q) { return q.topic === tid; }).length;
+      var n = quiz.filter(function (q) { return q.topic === tid; }).length;
       if (!n) return;
+      var nAI = window.JSH.aiq ? window.JSH.aiq.countFor(subject.id, tid) : 0;
       var cb = app.el('input', { type: 'checkbox', id: 'pick-' + tid });
       cb.addEventListener('change', function () { chosen[tid] = cb.checked; });
-      form.appendChild(app.el('label', { class: 'revised-item' }, cb, app.el('span', { text: ' ' + app.topicTitle(subject.id, tid) + ' (' + n + ' questions)' })));
+      form.appendChild(app.el('label', { class: 'revised-item' }, cb, app.el('span', { text: ' ' + app.topicTitle(subject.id, tid) + ' (' + n + (nAI ? ' · ' + nAI + ' AI' : '') + ')' })));
     });
     var start = app.el('button', { class: 'button', text: 'Start quiz' });
     start.addEventListener('click', function () {
       var topics = Object.keys(chosen).filter(function (t) { return chosen[t]; });
       if (!topics.length) { alert('Pick at least one topic!'); return; }
-      run(main, subject, data.quiz.filter(function (q) { return topics.indexOf(q.topic) !== -1; }), topics);
+      clearSession(subject.id);
+      run(main, subject, quiz.filter(function (q) { return topics.indexOf(q.topic) !== -1; }));
     });
     form.appendChild(start);
     main.appendChild(form);
+
+    if (window.JSH.aiq) window.JSH.aiq.renderGenerator(main, subject, function () { render(main, subject); });
   }
 
-  function run(main, subject, pool, topics) {
+  function run(main, subject, pool, resumeState) {
     var app = window.JSH.app;
-    var state = { i: 0, answers: {} };
+    var state = resumeState || { i: 0, answers: {} };
+    function persist() { saveSession(subject.id, pool, state); }
+    persist();
     var panel = app.el('section', { class: 'card' });
     main.textContent = '';
-    main.appendChild(app.el('h1', { text: '❓ Quiz — ' + pool.length + ' questions' }));
+    main.appendChild(app.el('h1', { text: '❓ Quiz — question ' + Math.min(state.i + 1, pool.length) + ' of ' + pool.length + ' (auto-saved)' }));
     main.appendChild(panel);
 
     function show() {
+      persist();
       panel.textContent = '';
       if (state.i >= pool.length) return finish();
       var q = pool[state.i];
-      panel.appendChild(app.el('p', { class: 'muted', text: 'Question ' + (state.i + 1) + ' of ' + pool.length + ' · ' + app.topicTitle(subject.id, q.topic) }));
+      panel.appendChild(app.el('p', { class: 'muted', text: 'Question ' + (state.i + 1) + ' of ' + pool.length + (q.ai ? ' · ✨ AI-generated' : '') + ' · ' + app.topicTitle(subject.id, q.topic) }));
       var head = app.el('h2', {}, q.question, app.el('span', { class: 'marks', text: ' (' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + ')' }));
       panel.appendChild(head);
       var answerEl = null;
@@ -49,6 +86,7 @@
           var radio = app.el('input', { type: 'radio', name: q.id });
           radio.addEventListener('change', function () {
             state.answers[q.id] = { selected: idx };
+            persist();
             nextBtn.disabled = false;
           });
           label.appendChild(radio);
@@ -70,6 +108,7 @@
               var b = app.el('button', { class: 'button', text: String(marks) });
               b.addEventListener('click', function () {
                 state.answers[q.id] = { awarded: marks };
+                persist();
                 nextBtn.disabled = false;
                 nextBtn.click();
               });
@@ -80,8 +119,7 @@
         panel.appendChild(reveal);
       }
 
-      // 🤖 AI assist: mark her answer, or teach her when stuck (family GLM key).
-      // Buttons ALWAYS show — with no key on this device, clicking offers the one-time key setup.
+      // 🤖 AI assist: mark her answer, or teach her when stuck (family GLM key)
       var tutorUi = window.JSH.ui.ai || {};
       var askAI;
       if (window.JSH.tutor) {
@@ -123,6 +161,7 @@
               var awarded = window.JSH.tutor.parseMark(text, q.marks);
               if (awarded !== null) {
                 state.answers[q.id] = { awarded: awarded };
+                persist();
                 nextBtn.disabled = false;
                 aiBox.appendChild(app.el('p', { class: 'muted', text: '✓ ' + awarded + ' / ' + q.marks + ' marks recorded — continue below.' }));
               }
@@ -141,11 +180,14 @@
       }
 
       var nextBtn = app.el('button', { class: 'button', text: state.i === pool.length - 1 ? 'Finish' : 'Next →', disabled: 'disabled' });
-      nextBtn.addEventListener('click', function () { state.i += 1; show(); });
+      // restoring an answered question: allow moving on without re-answering
+      if (state.answers[q.id]) nextBtn.disabled = false;
+      nextBtn.addEventListener('click', function () { state.i += 1; persist(); show(); });
       panel.appendChild(app.el('div', {}, nextBtn));
     }
 
     function finish() {
+      clearSession(subject.id);
       var result = window.JSH.gradeQuiz(pool, state.answers);
       var perTopic = {};
       pool.forEach(function (q, idx) {
