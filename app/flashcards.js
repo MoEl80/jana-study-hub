@@ -25,6 +25,8 @@
     main.appendChild(app.el('h1', { text: '🃏 ' + subject.name + ' — Flashcards' }));
     if (!data) { main.appendChild(app.el('p', { class: 'muted', text: 'Flashcards are on their way.' })); return; }
     var tids = app.topicIds(subject.id);
+    // built-in cards + AI-generated cards form one deck
+    var allCards = window.JSH.aiq ? window.JSH.aiq.mergedCards(subject.id, data.cards) : data.cards;
 
     // ▶ Resume a saved run?
     var saved = loadSession(subject.id);
@@ -33,7 +35,7 @@
       rc.appendChild(app.el('p', { class: 'muted', text: 'Card ' + (saved.i + 1) + ' of ' + saved.ids.length + ' still to go — continue the same run.' }));
       var res = app.el('button', { class: 'button', text: '▶ Resume' });
       res.addEventListener('click', function () {
-        var queue = saved.ids.map(function (id) { return data.cards.filter(function (c) { return c.id === id; })[0]; }).filter(Boolean);
+        var queue = saved.ids.map(function (id) { return allCards.filter(function (c) { return c.id === id; })[0]; }).filter(Boolean);
         session(main, subject, queue, saved.i);
       });
       var dis = app.el('button', { class: 'button danger', text: '✕ Discard' });
@@ -44,23 +46,26 @@
 
     var form = app.el('section', { class: 'card' }, app.el('h2', { text: 'Pick a topic' }));
     tids.forEach(function (tid) {
-      var cards = data.cards.filter(function (c) { return c.topic === tid; });
+      var cards = allCards.filter(function (c) { return c.topic === tid; });
       if (!cards.length) return;
       var due = cards.filter(function (c) { return window.JSH.leitner.isDue(cardEntry(subject.id, c.id), Date.now()); }).length;
-      var b = app.el('button', { class: 'button', text: app.topicTitle(subject.id, tid) + ' (' + cards.length + ' cards, ' + due + ' due now)' });
+      var nAI = window.JSH.aiq ? window.JSH.aiq.countForCards(subject.id, tid) : 0;
+      var b = app.el('button', { class: 'button', text: app.topicTitle(subject.id, tid) + ' (' + cards.length + ' cards, ' + due + ' due now' + (nAI ? ' · ' + nAI + ' AI' : '') + ')' });
       b.addEventListener('click', function () {
         clearSession(subject.id);
         session(main, subject, cards.slice());
       });
       form.appendChild(b);
     });
-    var all = app.el('button', { class: 'button', text: 'Mix everything (' + data.cards.length + ' cards)' });
+    var all = app.el('button', { class: 'button', text: 'Mix everything (' + allCards.length + ' cards)' });
     all.addEventListener('click', function () {
       clearSession(subject.id);
-      session(main, subject, data.cards.slice());
+      session(main, subject, allCards.slice());
     });
     form.appendChild(all);
     main.appendChild(form);
+
+    if (window.JSH.aiq) window.JSH.aiq.renderCardsGenerator(main, subject, function () { render(main, subject); });
   }
 
   function session(main, subject, cards, startAt) {

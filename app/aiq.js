@@ -151,9 +151,121 @@
     main.appendChild(card);
   }
 
+  /* ---------- ✨ AI FLASHCARDS (same pattern as questions) ---------- */
+  var CKEY = 'jsh.aiCards.';
+
+  function loadCards(subjectId) {
+    try { var a = JSON.parse(localStorage.getItem(CKEY + subjectId) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  }
+  function saveCards(subjectId, items) {
+    try { localStorage.setItem(CKEY + subjectId, JSON.stringify(items)); } catch (e) {}
+  }
+  function appendCards(subjectId, items) { saveCards(subjectId, loadCards(subjectId).concat(items)); }
+  function clearCards(subjectId) { try { localStorage.removeItem(CKEY + subjectId); } catch (e) {} }
+  function countForCards(subjectId, topicId) {
+    return loadCards(subjectId).filter(function (c) { return c.topic === topicId; }).length;
+  }
+  function mergedCards(subjectId, baseCards) { return baseCards.concat(loadCards(subjectId)); }
+
+  function buildCardsPrompt(subject, topics, count) {
+    var system = 'You are a study-material writer for a university subject. Output a STRICT JSON array and NOTHING else - no markdown fences, no commentary, no trailing commas. Each element must match exactly:\n' +
+      '{ "id":"aic-N", "topic":"<topic id from the list>", "front":"...", "back":"..." }\n' +
+      'front: a term, concept or short question prompt. back: a crisp self-contained answer/definition (1-3 sentences, university level) that explains it fully. ' +
+      'Vary the angles: definitions, mechanisms, comparisons, cause-effect, clinical/numeric facts where the subject has them. Every card must be factually accurate and unambiguous.';
+    var user = 'Subject: ' + (subject.code ? subject.code + ' - ' : '') + subject.name + '\n' +
+      'Topics (use these exact ids):\n' + topics.map(function (t) { return '- ' + t.id + ': ' + t.title; }).join('\n') + '\n' +
+      'Write ' + count + ' flashcards. Number the ids aic-1 to aic-' + count + '.';
+    return { system: system, messages: [{ role: 'user', content: user }] };
+  }
+
+  function sanitizeCards(items, allowedTopics, subjectId) {
+    var out = [];
+    var stamp = Date.now().toString(36);
+    (Array.isArray(items) ? items : []).forEach(function (raw, idx) {
+      if (!raw) return;
+      var front = typeof raw.front === 'string' ? raw.front.trim() : '';
+      var back = typeof raw.back === 'string' ? raw.back.trim() : '';
+      var topic = String(raw.topic || '');
+      if (front.length < 3 || back.length < 5) return;
+      if (allowedTopics.indexOf(topic) === -1) return;
+      out.push({ id: subjectId + '-aic-' + stamp + '-' + idx, topic: topic, front: front, back: back, ai: true });
+    });
+    return out;
+  }
+
+  function generateCards(cfg, subject, topics, count, fetchImpl) {
+    var tutor = (typeof self !== 'undefined' && self.JSH && self.JSH.tutor) || (typeof window !== 'undefined' && window.JSH && window.JSH.tutor);
+    var payload = buildCardsPrompt(subject, topics, count);
+    return tutor.chat(cfg, payload, fetchImpl, { maxTokens: 8000 })
+      .then(function (text) {
+        var items = sanitizeCards(extractJson(text), topics.map(function (t) { return t.id; }), subject.id);
+        if (!items.length) throw new Error('AI returned no usable cards - try again');
+        appendCards(subject.id, items);
+        return items;
+      });
+  }
+
+  function renderCardsGenerator(main, subject, rerender) {
+    var app = window.JSH.app;
+    var card = app.el('section', { class: 'card' }, app.el('h2', { text: '✨ Generate AI flashcards' }));
+    var existing = loadCards(subject.id);
+
+    var chosen = {};
+    var guide = app.part(subject.id, 'guide');
+    (guide ? guide.topics : []).forEach(function (t) {
+      var cb = app.el('input', { type: 'checkbox', id: 'genc-' + t.id });
+      cb.addEventListener('change', function () { chosen[t.id] = cb.checked; });
+      card.appendChild(app.el('label', { class: 'revised-item' }, cb, app.el('span', { text: ' ' + t.title })));
+    });
+
+    var row = app.el('div', { class: 'tutor-starters' });
+    var num = app.el('input', { type: 'number', min: '1', max: String(MAX_PER_RUN), value: '10', class: 'no-print', style: 'width:70px' });
+    row.appendChild(app.el('label', {}, ' How many cards: ', num));
+    card.appendChild(row);
+
+    var status = app.el('p', { class: 'muted', text: existing.length ? existing.length + ' AI-generated cards currently in your deck for this subject.' : 'The AI writes front/back cards for the topics you tick - they join your deck permanently (until removed).' });
+    card.appendChild(status);
+
+    var genBtn = app.el('button', { class: 'button', text: '✨ Generate with AI' });
+    genBtn.addEventListener('click', function () {
+      var cfg = window.JSH.ui.ai && window.JSH.ui.ai.getConfig ? window.JSH.ui.ai.getConfig() : null;
+      if (!cfg || !cfg.key) {
+        var k = prompt('The AI is not switched on on this device yet.\nPaste the family GLM key (one time only):', '');
+        if (k && k.trim()) { try { localStorage.setItem('jsh.tutorKey', k.trim()); } catch (e) {} location.reload(); }
+        return;
+      }
+      var tids = Object.keys(chosen).filter(function (t) { return chosen[t]; });
+      if (!tids.length) { alert('Tick at least one topic!'); return; }
+      var topics = guide.topics.filter(function (t) { return tids.indexOf(t.id) !== -1; });
+      var count = Math.max(1, Math.min(MAX_PER_RUN, num.value | 0 || 10));
+      genBtn.disabled = true; genBtn.textContent = '✨ Writing ' + count + ' cards…';
+      status.textContent = 'This usually takes 20-60 seconds. Keep this page open.';
+      generateCards(cfg, subject, topics, count)
+        .then(function (items) { status.textContent = '✓ Added ' + items.length + ' new cards to your deck.'; rerender(); })
+        .catch(function (e) { status.textContent = 'Generation failed: ' + e.message + ' - try fewer cards or try again.'; })
+        .then(function () { genBtn.disabled = false; genBtn.textContent = '✨ Generate with AI'; });
+    });
+    card.appendChild(genBtn);
+
+    if (existing.length) {
+      var rm = app.el('button', { class: 'button danger', text: '🗑 Remove all AI cards (' + existing.length + ')' });
+      rm.addEventListener('click', function () {
+        if (confirm('Remove all ' + existing.length + ' AI-generated cards for this subject? (Your built-in cards stay.)')) {
+          clearCards(subject.id); rerender();
+        }
+      });
+      card.appendChild(rm);
+    }
+    main.appendChild(card);
+  }
+
   return {
     load: load, append: append, clear: clear, countFor: countFor, merged: merged,
     buildGenPrompt: buildGenPrompt, extractJson: extractJson, sanitize: sanitize,
-    generate: generate, renderGenerator: renderGenerator, MAX_PER_RUN: MAX_PER_RUN
+    generate: generate, renderGenerator: renderGenerator, MAX_PER_RUN: MAX_PER_RUN,
+    loadCards: loadCards, appendCards: appendCards, clearCards: clearCards,
+    countForCards: countForCards, mergedCards: mergedCards,
+    buildCardsPrompt: buildCardsPrompt, sanitizeCards: sanitizeCards,
+    generateCards: generateCards, renderCardsGenerator: renderCardsGenerator
   };
 });
