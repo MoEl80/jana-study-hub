@@ -63,19 +63,28 @@
       var btn = document.getElementById('tutor-ask');
       btn.disabled = true;
       btn.textContent = 'Thinking…';
-      tutor.chat(cfg, tutor.buildMessages(course, history, q))
+      // stream the answer live — first words appear in seconds
+      var b = app.el('div', { class: 'bubble tutor-ai' });
+      var body = app.el('div', {});
+      b.appendChild(body);
+      log.appendChild(b);
+      log.scrollTop = log.scrollHeight;
+      tutor.chat(cfg, tutor.buildMessages(course, history, q), null, {
+        onDelta: function (t) { body.textContent += t; log.scrollTop = log.scrollHeight; }
+      })
         .then(function (answer) {
           history.push({ role: 'user', content: q }, { role: 'assistant', content: answer });
           saveHistory(history);
-          bubble('assistant', answer);
+          body.innerHTML = app.fmtBody(answer);
         })
         .catch(function (e) {
-          bubble('assistant', '**Could not reach the tutor:** ' + e.message + '\n\nCheck the key in data/tutor-key.js (or tell Pi the error).');
+          body.innerHTML = app.fmtBody('**Could not reach the tutor:** ' + e.message + '\n\nCheck the key in data/tutor-key.js (or tell Pi the error).');
         })
         .then(function () {
           pending = false;
           btn.disabled = false;
           btn.textContent = 'Ask';
+          log.scrollTop = log.scrollHeight;
         });
     }
 

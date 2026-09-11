@@ -125,8 +125,40 @@
     return new Error(msg);
   }
 
+  /* Stream an OpenAI-style SSE response (chat.completion.chunk); onDelta gets each text chunk, resolves with full text. */
+  function streamTextOAI(res, onDelta) {
+    var reader = res.body.getReader();
+    var dec = new TextDecoder();
+    var buf = '', full = '';
+    function pump() {
+      return reader.read().then(function (r) {
+        if (r.done) return full;
+        buf += dec.decode(r.value, { stream: true });
+        var lines = buf.split('\n');
+        buf = lines.pop();
+        lines.forEach(function (line) {
+          if (line.indexOf('data:') !== 0) return;
+          var s = line.slice(5).trim();
+          if (!s || s === '[DONE]') return;
+          var ev; try { ev = JSON.parse(s); } catch (e) { return; }
+          if (ev.error) throw new Error(ev.error.message || 'stream error');
+          var d = ev.choices && ev.choices[0] && ev.choices[0].delta;
+          if (d && d.content) {
+            full += d.content;
+            try { onDelta(d.content); } catch (e) {}
+          }
+        });
+        return pump();
+      });
+    }
+    return pump().then(function (text) {
+      if (!text) throw new Error('Empty reply from GLM');
+      return text;
+    });
+  }
+
   /* config: { key, kind?, model?, endpoint? }; payload from buildMessages; fetchImpl injectable for tests;
-     opts: { maxTokens?, thinking? } let bulk jobs (e.g. question generation) buy more output room. */
+     opts: { maxTokens?, thinking?, onDelta? } — onDelta streams text live (faster perceived replies). */
   function chat(config, payload, fetchImpl, opts) {
     opts = opts || {};
     var f = fetchImpl || (typeof fetch !== 'undefined' ? fetch : null);
@@ -139,21 +171,42 @@
     var req;
 
     if (kind === 'anthropic') {
-      req = f(endpoint + '/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': config.key, 'anthropic-version': '2023-06-01' },
-        // max effort: thinking enabled with a generous budget — smarter marking and explanations (verified live 2026-09-09)
-        body: JSON.stringify({ model: model, max_tokens: opts.maxTokens || 4000, thinking: { type: 'enabled', effort: 'high', budget_tokens: opts.thinking || 3000 }, system: payload.system, messages: payload.messages })
-      }).then(function (res) {
-        return res.json().then(function (data) {
-          if (!res.ok) throw extractError(data, res.status);
-          var text = ((data && data.content) || [])
-            .filter(function (b) { return b.type === 'text'; })
-            .map(function (b) { return b.text; }).join('');
-          if (!text) throw new Error('Empty reply from GLM');
-          return text;
+      // max effort on GLM 5.3; budget defaults tuned for fast replies, jobs can raise it via opts.thinking
+      var thinking = { type: 'enabled', effort: 'max', budget_tokens: opts.thinking || 2000 };
+      if (opts.onDelta) {
+        // STREAMING fast path: the anthropic endpoint blocks browser streams, so stream via the
+        // OpenAI-compatible endpoint of the same host (same key, same model, thinking enabled).
+        var oaiEp = String(config.endpoint || DEFAULTS.anthropic.endpoint).replace(/\/api\/anthropic.*$/, '/api/paas/v4/chat/completions');
+        var msgs = [{ role: 'system', content: payload.system }].concat(payload.messages);
+        var hdrs = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.key };
+        var body = function (withEffort) {
+          var th = { type: 'enabled' }; if (withEffort) th.effort = 'max';
+          return JSON.stringify({ model: model, messages: msgs, stream: true, max_tokens: opts.maxTokens || 4000, thinking: th });
+        };
+        req = f(oaiEp, { method: 'POST', headers: hdrs, body: body(true) }).then(function (res) {
+          if (res.ok) return streamTextOAI(res, opts.onDelta);
+          // some deployments reject the effort field: one retry without it
+          return f(oaiEp, { method: 'POST', headers: hdrs, body: body(false) }).then(function (res2) {
+            if (!res2.ok) return res2.json().then(function (data) { throw extractError(data, res2.status); });
+            return streamTextOAI(res2, opts.onDelta);
+          });
         });
-      });
+      } else {
+        req = f(endpoint + '/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': config.key, 'anthropic-version': '2023-06-01' },
+          body: JSON.stringify({ model: model, max_tokens: opts.maxTokens || 4000, thinking: thinking, system: payload.system, messages: payload.messages })
+        }).then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok) throw extractError(data, res.status);
+            var text = ((data && data.content) || [])
+              .filter(function (b) { return b.type === 'text'; })
+              .map(function (b) { return b.text; }).join('');
+            if (!text) throw new Error('Empty reply from GLM');
+            return text;
+          });
+        });
+      }
     } else {
       var msgs = [{ role: 'system', content: payload.system }].concat(payload.messages);
       req = f(endpoint, {

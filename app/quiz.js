@@ -81,6 +81,7 @@
       panel.appendChild(head);
       var answerEl = null;
       if (q.type === 'mcq') {
+        var radios = [];
         q.options.forEach(function (opt, idx) {
           var label = app.el('label', { class: 'option' });
           var radio = app.el('input', { type: 'radio', name: q.id });
@@ -89,13 +90,24 @@
             persist();
             nextBtn.disabled = false;
           });
+          radios.push(radio);
           label.appendChild(radio);
           label.appendChild(document.createTextNode(' ' + opt));
           panel.appendChild(label);
         });
+        // restore her earlier choice when navigating back
+        var prevAns = state.answers[q.id];
+        if (prevAns && typeof prevAns.selected === 'number' && radios[prevAns.selected]) radios[prevAns.selected].checked = true;
       } else {
         var ta = app.el('textarea', { class: 'answer', placeholder: 'Type your answer…' });
         answerEl = ta;
+        var pre = state.answers[q.id];
+        if (pre && pre.text) ta.value = pre.text; // restore her draft when navigating back
+        ta.addEventListener('input', function () {
+          state.answers[q.id] = state.answers[q.id] || {};
+          state.answers[q.id].text = ta.value;
+          persist();
+        });
         panel.appendChild(ta);
         var reveal = app.el('button', { class: 'button', text: 'Show model answer & mark yourself' });
         reveal.addEventListener('click', function () {
@@ -107,7 +119,8 @@
             (function (marks) {
               var b = app.el('button', { class: 'button', text: String(marks) });
               b.addEventListener('click', function () {
-                state.answers[q.id] = { awarded: marks };
+                state.answers[q.id] = state.answers[q.id] || {};
+                state.answers[q.id].awarded = marks;
                 persist();
                 nextBtn.disabled = false;
                 nextBtn.click();
@@ -125,7 +138,7 @@
       if (window.JSH.tutor) {
         var aiBox = app.el('div', { class: 'ai-feedback', style: 'display:none' });
         var aiBusy = false;
-        askAI = function (payload, busyLabel, onDone) {
+        askAI = function (payload, busyLabel, onDone, thinkingBudget) {
           if (aiBusy) return;
           var cfg = tutorUi.getConfig ? tutorUi.getConfig() : null;
           if (!cfg || !cfg.key) {
@@ -139,7 +152,14 @@
           aiBusy = true;
           aiBox.style.display = 'block';
           aiBox.textContent = busyLabel;
-          window.JSH.tutor.chat(cfg, payload)
+          var started = false;
+          window.JSH.tutor.chat(cfg, payload, null, {
+            thinking: thinkingBudget,
+            onDelta: function (t) {
+              if (!started) { aiBox.textContent = ''; started = true; }
+              aiBox.textContent += t;
+            }
+          })
             .then(function (text) { aiBox.innerHTML = app.fmtBody(text); if (onDone) onDone(text); })
             .catch(function (e) { aiBox.textContent = 'AI unavailable: ' + e.message; })
             .then(function () { aiBusy = false; });
@@ -160,12 +180,13 @@
             askAI(window.JSH.tutor.buildMarkingPrompt(q, txt), '🤖 Marking…', function (text) {
               var awarded = window.JSH.tutor.parseMark(text, q.marks);
               if (awarded !== null) {
-                state.answers[q.id] = { awarded: awarded };
+                state.answers[q.id] = state.answers[q.id] || {};
+                state.answers[q.id].awarded = awarded;
                 persist();
                 nextBtn.disabled = false;
                 aiBox.appendChild(app.el('p', { class: 'muted', text: '✓ ' + awarded + ' / ' + q.marks + ' marks recorded — continue below.' }));
               }
-            });
+            }, 3000);
           });
           tools.appendChild(markBtn);
           var teachBtn = app.el('button', { class: 'button', text: '💡 I don\'t know — teach me' });
@@ -183,7 +204,14 @@
       // restoring an answered question: allow moving on without re-answering
       if (state.answers[q.id]) nextBtn.disabled = false;
       nextBtn.addEventListener('click', function () { state.i += 1; persist(); show(); });
-      panel.appendChild(app.el('div', {}, nextBtn));
+      var nav = app.el('div', {});
+      if (state.i > 0) {
+        var prevBtn = app.el('button', { class: 'button', text: '← Previous' });
+        prevBtn.addEventListener('click', function () { state.i -= 1; persist(); show(); });
+        nav.appendChild(prevBtn);
+      }
+      nav.appendChild(nextBtn);
+      panel.appendChild(nav);
     }
 
     function finish() {
