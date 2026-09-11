@@ -1,0 +1,18 @@
+/* Tutor key — COPY this file to data/tutor-key.js and paste your key.
+   data/tutor-key.js is GITIGNORED and never deployed to the public website.
+
+   Option A (default) — your GLM Coding Plan subscription:
+     1. Log in at https://open.bigmodel.cn with your subscription account.
+     2. API Keys page -> create a key -> paste below.
+     Uses the subscription's Anthropic-compatible endpoint. */
+(function (root) {
+  root.JSH_TUTOR_KEY = {
+    kind: 'anthropic',
+    key: 'PASTE-YOUR-KEY-HERE',
+    model: 'glm-5.3'
+  };
+
+  /* Option B — free pay-as-you-go instead of the subscription: use
+     { kind: 'openai', key: '...', model: 'glm-4-flash' }
+     (endpoint defaults are built in; only change them if you know you need to). */
+})(typeof self !== 'undefined' ? self : globalThis);
