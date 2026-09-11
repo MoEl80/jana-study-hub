@@ -40,7 +40,10 @@
       'C (extended): { "id":"aiq-N", "topic":"<topic id>", "type":"extended", "marks":8, "question":"...", "answer":"structured model answer with the marking points", "explanation":"marking guidance" }\n' +
       'Rules: university exam level, factually accurate, self-contained questions (no unseen passages), cover the given topics with varied angles, do not repeat the same stem.';
     var user = 'Subject: ' + (subject.code ? subject.code + ' - ' : '') + subject.name + '\n' +
-      'Topics (use these exact ids):\n' + topics.map(function (t) { return '- ' + t.id + ': ' + t.title; }).join('\n') + '\n' +
+      'Topics (use these exact ids; base the questions on the key points):\n' + topics.map(function (t) {
+        var pts = (t.keyKnowledge || []).slice(0, 6).map(function (k) { return String(k).slice(0, 150); });
+        return '- ' + t.id + ': ' + t.title + (pts.length ? '\n  key points: ' + pts.join('; ') : '');
+      }).join('\n') + '\n' +
       'Write ' + count + ' ' + typeText + '. Number the ids aiq-1 to aiq-' + count + '.';
     return { system: system, messages: [{ role: 'user', content: user }] };
   }
@@ -173,7 +176,10 @@
       'front: a term, concept or short question prompt. back: a crisp self-contained answer/definition (1-3 sentences, university level) that explains it fully. ' +
       'Vary the angles: definitions, mechanisms, comparisons, cause-effect, clinical/numeric facts where the subject has them. Every card must be factually accurate and unambiguous.';
     var user = 'Subject: ' + (subject.code ? subject.code + ' - ' : '') + subject.name + '\n' +
-      'Topics (use these exact ids):\n' + topics.map(function (t) { return '- ' + t.id + ': ' + t.title; }).join('\n') + '\n' +
+      'Topics (use these exact ids; base the cards on the key points):\n' + topics.map(function (t) {
+        var pts = (t.keyKnowledge || []).slice(0, 6).map(function (k) { return String(k).slice(0, 150); });
+        return '- ' + t.id + ': ' + t.title + (pts.length ? '\n  key points: ' + pts.join('; ') : '');
+      }).join('\n') + '\n' +
       'Write ' + count + ' flashcards. Number the ids aic-1 to aic-' + count + '.';
     return { system: system, messages: [{ role: 'user', content: user }] };
   }
