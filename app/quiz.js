@@ -80,21 +80,32 @@
         panel.appendChild(reveal);
       }
 
-      // 🤖 AI assist: mark her answer, or teach her when stuck (family GLM key)
-      var tutorCfg = window.JSH.ui.ai && window.JSH.ui.ai.getConfig ? window.JSH.ui.ai.getConfig() : null;
-      if (tutorCfg && tutorCfg.key && window.JSH.tutor) {
+      // 🤖 AI assist: mark her answer, or teach her when stuck (family GLM key).
+      // Buttons ALWAYS show — with no key on this device, clicking offers the one-time key setup.
+      var tutorUi = window.JSH.ui.ai || {};
+      var askAI;
+      if (window.JSH.tutor) {
         var aiBox = app.el('div', { class: 'ai-feedback', style: 'display:none' });
         var aiBusy = false;
-        function askAI(payload, busyLabel, onDone) {
+        askAI = function (payload, busyLabel, onDone) {
           if (aiBusy) return;
+          var cfg = tutorUi.getConfig ? tutorUi.getConfig() : null;
+          if (!cfg || !cfg.key) {
+            var k = prompt('The AI tutor is not switched on on this device yet.\nPaste the family GLM key (one time only — ask Dad/Pi for it):', '');
+            if (k && k.trim()) {
+              try { localStorage.setItem('jsh.tutorKey', k.trim()); } catch (e) {}
+              location.reload();
+            }
+            return;
+          }
           aiBusy = true;
           aiBox.style.display = 'block';
           aiBox.textContent = busyLabel;
-          window.JSH.tutor.chat(tutorCfg, payload)
+          window.JSH.tutor.chat(cfg, payload)
             .then(function (text) { aiBox.innerHTML = app.fmtBody(text); if (onDone) onDone(text); })
             .catch(function (e) { aiBox.textContent = 'AI unavailable: ' + e.message; })
             .then(function () { aiBusy = false; });
-        }
+        };
         var tools = app.el('div', { class: 'tutor-starters' });
         if (q.type === 'mcq') {
           var exBtn = app.el('button', { class: 'button', text: '🤖 Explain this question' });
