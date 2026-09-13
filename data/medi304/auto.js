@@ -453,6 +453,107 @@
             "Understanding why means are displayed with SEM error bars on poster figures and how the figure is transferred into the poster."
           ],
           "ai": true
+        },
+        {
+          "id": "research-fundamentals",
+          "title": "Foundations of research: questions, types and approaches",
+          "outcomes": [
+            "Types of human research",
+            "Types of research questions",
+            "Choose the right type of research"
+          ],
+          "bigIdea": "Choosing the right research approach starts with classifying the question (basic, applied or clinical) and matching it to an appropriate study type (qualitative or quantitative, correlational or causal, field or laboratory).",
+          "keyKnowledge": [
+            "Research is a systematic process undertaken to increase knowledge: a way to gather information, make judgements on existing data, and generate new knowledge and skills.",
+            "Research questions aim to address health, medical or clinical problems, and research objects include human subjects, experimental animals and cells.",
+            "Basic research deals with theoretical concepts with no immediate concern with application, is driven by a scientist's curiosity or interest, expands knowledge and has no obvious commercial value (e.g. how did the universe begin; what genes code for fruit flies).",
+            "Applied research is undertaken with a specific question or application for the general public to solve practical problems, including everyday problems, curing illness and innovative technologies (e.g. dietary fibre and gut health, improving MRI resolution for early tumour detection).",
+            "Clinical research directly involves a particular patient or population, problem, intervention, prognostic factor or exposure, and can address pathology (tissue samples), organ function (heart, kidney, gut) or behaviour (learning, memory, cognitive function).",
+            "Types of human research are survey research (asking people about knowledge, experience, attitudes, preference), observational research (case, cross-sectional, case-control and cohort) and experimental/interventional research; new knowledge reaches medical practice through pathophysiological, population-based and behavioural improvement.",
+            "Qualitative research emphasises words rather than numbers in data collection and analysis and focuses on generating theories, capturing lived experiences and subjective meanings; quantitative research emphasises numbers, focuses on testing theories and studies cause-and-effect relationships.",
+            "A good quantitative topic must begin with a clearly formulated hypothesis that is quantitative, specific and predicts a relationship of a specific size (e.g. replacing 'breast-fed babies have less illness' with a question specifying exclusive breast-feeding for 3+ months and at least 30% reduction in hospital admissions for gastroenteritis in the first year)."
+          ],
+          "keyTerms": [
+            {
+              "term": "Basic research",
+              "definition": "Research driven by curiosity or theoretical interest with no immediate concern for application or commercial value, undertaken to expand knowledge."
+            },
+            {
+              "term": "Applied research",
+              "definition": "Research undertaken with a specific question or application for the general public in order to solve practical problems."
+            },
+            {
+              "term": "Clinical research",
+              "definition": "Research directly involving a particular patient or population, problem, intervention, prognostic factor or exposure."
+            },
+            {
+              "term": "Qualitative research",
+              "definition": "Research strategies emphasising words rather than numbers in data collection and analysis, focused on generating theories and understanding meanings and subjective experience."
+            },
+            {
+              "term": "Quantitative research",
+              "definition": "Research strategies emphasising numbers in data collection and analysis, focused on testing theories and cause-and-effect relationships."
+            },
+            {
+              "term": "Correlational research",
+              "definition": "A non-experimental method that examines relationships between or among variables without necessarily determining cause and effect."
+            }
+          ],
+          "examFocus": [
+            "Classifying given research questions as basic, applied or clinical with justification",
+            "Distinguishing qualitative from quantitative research questions and justifying the choice of approach",
+            "Critiquing a proposed quantitative research topic for specificity of hypothesis, variables and predicted effect size"
+          ],
+          "ai": true
+        },
+        {
+          "id": "or-rr-ci",
+          "title": "Odds ratio, relative risk and confidence intervals",
+          "outcomes": [
+            "auto-synced"
+          ],
+          "bigIdea": "Effect measures such as the odds ratio and relative risk quantify the strength of exposure-outcome associations, while confidence intervals express the precision of those estimates.",
+          "keyKnowledge": [
+            "Odds is a measure of association between an exposure and an outcome; the OR compares the odds of exposure in cases versus controls, calculated as (a/b)/(c/d)",
+            "OR = 1 indicates no change in frequency of exposure; OR > 1 indicates increased frequency of exposure among cases; OR < 1 indicates decreased frequency (possible protective effect)",
+            "OR is commonly used for risk factors in case-control studies; worked example: (30/2)/(160/198) = 18.56, meaning the odds of exposure for cases is 18.6 times that of controls",
+            "RR = [a/(a+b)]/[c/(c+d)], the ratio of the probability of an event in the exposed group to that in the non-exposed group; RR > 1 increased risk, RR < 1 reduced risk, RR = 1 no risk difference",
+            "Percent change in risk is calculated as (RR − 1) × 100; e.g. RR 3.30 means a 230% increase and 3.3 times as many outcomes",
+            "Thresholds for a convincing effect depend on the level of evidence: an RCT may satisfy with a small risk change, a cohort study needs RR > 3 for a minor adverse event, and a case-control study needs OR > 4; clinical importance also depends on baseline risk (30% to 90% at RR = 3 is important; 0.1% to 0.3% is not)",
+            "CI = mean ± (SE × critical value), with critical values of about 1 (68%), 1.96 (95%) and 2.58 (99%); higher confidence gives a wider interval, and CI is commonly reported with OR and RR"
+          ],
+          "keyTerms": [
+            {
+              "term": "Odds",
+              "definition": "A measure of association between an exposure and an outcome, expressed as the ratio of the event occurring to it not occurring (e.g. 1/5 for rolling a 1 on a die)."
+            },
+            {
+              "term": "Odds ratio (OR)",
+              "definition": "The odds that an outcome will occur given a particular exposure compared with the odds of the outcome occurring without that exposure; in a case-control study, (exposed cases/unexposed cases) ÷ (exposed controls/unexposed controls)."
+            },
+            {
+              "term": "Relative risk ratio (RR)",
+              "definition": "The ratio of the probability of an event in an exposed group to the probability of the event in a non-exposed group: [a/(a+b)]/[c/(c+d)]."
+            },
+            {
+              "term": "Confidence interval (CI)",
+              "definition": "A range of values that we are sure the actual value lies within; e.g. a 95% CI is the range in which we are 95% confident the true value lies."
+            },
+            {
+              "term": "Baseline risk",
+              "definition": "The underlying risk of an outcome in the absence of the exposure, which must be assessed before deciding whether a given RR or OR is clinically important."
+            },
+            {
+              "term": "Critical value",
+              "definition": "The multiplier of the standard error used to calculate a CI at a given confidence level (1.96 for 95%, 2.58 for 99%)."
+            }
+          ],
+          "examFocus": [
+            "Calculate an OR from a 2×2 table in a case-control study and interpret its direction and magnitude",
+            "Interpret RR values as percentage or fold changes using (RR − 1) × 100 and apply baseline risk to judge clinical importance",
+            "Compute and compare CIs at 68%, 95% and 99% confidence levels using critical values of about 1, 1.96 and 2.58"
+          ],
+          "ai": true
         }
       ],
       "questions": [
@@ -4234,6 +4335,416 @@
           "marks": 8,
           "answer": "A cross-sectional study examines data at one specific point in time and is commonly known as a prevalence study; it does not follow participants over years and involves no random allocation of treatments. In the obesity example, BMI and body-fat percentage would be measured simultaneously in a sample to determine the strength of the association between the two measures. Body weight alone is inappropriate because height can influence body weight and body composition matters, which is why a height-adjusted index such as BMI is used. The study can establish an association and estimate how common obesity is at that time point, but it cannot demonstrate that BMI causes obesity, cannot compare treatments, and cannot show changes over time. Like case-control studies, cross-sectional designs are primarily used to establish association rather than causation.",
           "explanation": "The quiz stresses that cross-sectional designs measure at one time point, suit association/prevalence questions, and cannot support causal or treatment-efficacy claims."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q0",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "In a 12-month exercise trial, child participants naturally grow taller and gain weight, making it difficult to separate the treatment effect from natural development. Which threat to internal validity does this illustrate?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Maturation",
+            "History",
+            "Testing",
+            "Instrumentation"
+          ],
+          "answer": 0,
+          "explanation": "Maturation refers to subjects changing during the course of the experiment (e.g., growth in body weight and height in children, or fatigue in chronic studies), independent of the intervention. History involves outside events, testing involves baseline learning/practice effects, and instrumentation involves changes in measurement calibration or assessors."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q1",
+          "topic": "measurements",
+          "ai": true,
+          "question": "A questionnaire designed to measure depression is criticised because it also appears to capture symptoms of closely related conditions such as bipolar disorder and schizophrenia. Which type of validity is compromised?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Face validity",
+            "Construct validity",
+            "Concurrent validity",
+            "Predictive validity"
+          ],
+          "answer": 1,
+          "explanation": "Construct validity requires that a test measures only the underlying theoretical construct it aims to measure - here depression - and not closely related constructs such as bipolar disorder or schizophrenia."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q2",
+          "topic": "measurements",
+          "ai": true,
+          "question": "A new functional test is compared against an established benchmark test, and a high correlation is found. Which type of validity has been demonstrated?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Concurrent validity",
+            "Predictive validity",
+            "Face validity",
+            "Ecological validity"
+          ],
+          "answer": 0,
+          "explanation": "Concurrent validity measures the test against a benchmark test; a high correlation indicates strong criterion validity. Predictive validity instead concerns whether the test predicts later performance on a related criterion."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q3",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "Over a long trial, more participants are lost from the control group than from the intervention group. Which threat to internal validity is this?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Experimental mortality",
+            "Maturation",
+            "Expectancy",
+            "Statistical factor (regression to the mean)"
+          ],
+          "answer": 0,
+          "explanation": "Experimental mortality is the differential loss of participants between groups (e.g., dropout, injury, moving out of the city, family reasons, intervention non-compliance), especially from the control group."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q4",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "Distinguish between internal validity and external validity in research.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Internal validity is the extent to which a concept is accurately measured and the evidence supports a causal cause-and-effect claim, with RCTs improving it by controlling confounding factors and bias. External validity is about the generalization of research outcomes - whether results can be applied to other populations, settings or treatments (e.g., population validity, ecological validity) - and requires subjects who are representative of the population.",
+          "explanation": "A high-quality answer defines both, notes the causal/evidence-support role of internal validity and the generalizability role of external validity."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q5",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "Researchers study heart rate variability responses in Olympic athletes and wish to generalise their findings to the general population. Identify the threat to external validity and explain how it could be addressed.",
+          "type": "short",
+          "marks": 3,
+          "answer": "The threat is selection bias: Olympic athletes are not representative of the general population, so the results cannot be correctly generalised. It can be addressed through inclusion and exclusion criteria that ensure participants represent the target population (including geographic considerations), an adequate sample size, and replication of the study in different samples or settings.",
+          "explanation": "Marks for naming selection bias, explaining non-representativeness, and giving improvement strategies from the lecture."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q6",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "Explain the selection-maturation interaction as a threat to internal validity, and describe how per-protocol (PP) and intention-to-treat (ITT) reporting relate to participant dropout.",
+          "type": "short",
+          "marks": 4,
+          "answer": "The selection-maturation interaction arises when groups that were not equivalent at baseline (due to non-random selection) mature or change differently over the study, so observed changes may reflect these differential changes rather than the independent variable. Participant dropout through injury, moving out of the city, family reasons or intervention non-compliance can create this differential change. A PP report analyses only those who complied with the allocated intervention, which can exaggerate treatment effects when compliers differ from dropouts, whereas an ITT report analyses all participants as originally allocated, preserving group equivalence and internal validity.",
+          "explanation": "Award marks for: defining the interaction, linking to non-equivalent groups changing differently, describing PP and ITT, and noting how dropout (experimental mortality) biases comparisons."
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-q7",
+          "topic": "bias-validity-ebm",
+          "ai": true,
+          "question": "Discuss the major threats to internal validity in experimental research and evaluate the strategies used to control them.",
+          "type": "extended",
+          "marks": 10,
+          "answer": "Threats: (1) History/background - events outside the study that are not part of treatment, e.g., subjects joining another physical activity study; (2) Maturation - subjects change over the course of the experiment, such as growth in children or fatigue altering reactions to the IV in chronic studies; (3) Testing - baseline learning or practice effects from multiple factorial tests; (4) Instrumentation and assessor changes - changes in calibration of measurements or assessors; (5) Statistical factors - selection based on extreme scores alters regression to the mean; (6) Selection bias - non-random participant selection producing non-equivalent groups; (7) Experimental mortality - differential loss of participants, especially from the control group; (8) Selection-maturation interaction - linked to PP vs ITT reporting when subjects drop out, are injured, move away or fail to comply; (9) Expectancy - researchers anticipate certain subjects will perform better. Controls: blinding participants and researchers (addresses expectancy), random assignment to treatment and control groups (addresses selection threats and confounding), appropriate control group matching (addresses history/maturation by providing a comparison), and experimental manipulation of the independent variable (establishes the causal relationship). More broadly, randomization, an appropriate control group, limiting extraneous variables through inclusion/exclusion criteria, and adequate sample size with representative characteristics and geography enhance both internal and external validity. Evaluation: randomisation is the most powerful single control because it produces equivalent groups at baseline, but blinding and ITT analysis are still needed to protect against expectancy and mortality during follow-up; inclusion/exclusion criteria improve validity but overly narrow criteria can reduce generalizability.",
+          "explanation": "A strong answer names at least 6-7 threats with examples, lists the four specific control strategies, and critically evaluates how each control maps onto specific threats, noting trade-offs with external validity."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q0",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "Which of the following best characterises basic research questions?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "They are undertaken to solve practical problems of the general public",
+            "They deal with theoretical concepts and have no immediate concern with application",
+            "They directly involve a particular patient, population or intervention",
+            "They establish cause-and-effect relationships through an intervention"
+          ],
+          "answer": 1,
+          "explanation": "Basic research is driven by curiosity or theoretical interest (e.g. how the universe began) with no immediate application, unlike applied (general public) or clinical (patients/populations) questions."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q1",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "Which statement about qualitative and quantitative research is correct?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Qualitative research emphasises numbers and tests theories",
+            "Quantitative research focuses on generating theories from lived experience",
+            "Qualitative research emphasises words in data collection and analysis and focuses on generating theories",
+            "Quantitative research captures the meanings people give to experience from their own perspective"
+          ],
+          "answer": 2,
+          "explanation": "Qualitative research emphasises words and theory generation; quantitative research emphasises numbers, theory testing and cause-and-effect relationships."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q2",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "'Does the administration of pain medication at the time of surgical incision last 24 hours after surgery?' is an example of which type of research question?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Basic research question",
+            "Applied research (general public) question",
+            "Clinical research question",
+            "Correlational research question"
+          ],
+          "answer": 2,
+          "explanation": "It directly involves particular patients, an intervention and a clinical outcome, so it is a clinical research question; it does not answer mechanistic questions and does not involve the general public."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q3",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "Which of the following is true of correlational research?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "It is an experimental method that establishes cause and effect",
+            "It examines relationships between variables without necessarily determining cause and effect",
+            "It can only be conducted in a laboratory",
+            "It asks people about their knowledge, attitudes and preferences"
+          ],
+          "answer": 1,
+          "explanation": "Correlational research is non-experimental and examines whether variables are related (e.g. IQ and self-esteem), without determining causation."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q4",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "'Babies who are breast-fed have less illness than babies who are bottle-fed' was rejected as a good quantitative research topic. Give two reasons why it is inadequate, and state one feature a good quantitative topic must include.",
+          "type": "short",
+          "marks": 3,
+          "answer": "It is inadequate because 'illness' is not defined (which illness?), the exposure is not defined (feeding type and duration are unspecified), and no size of the predicted relationship is stated (how large a difference in risk?). A good quantitative topic must begin with a clearly formulated hypothesis that is quantitative and specific and predicts a relationship of a specific size, e.g. 'Will babies exclusively breast-fed for 3 months or more have at least a 30% reduction in hospital admissions for gastroenteritis over the first year of life?'",
+          "explanation": "The improved version specifies the exposure (exclusive breast-feeding 3+ months), the outcome (hospital admission for gastroenteritis), the timeframe (first year of life) and the effect size (at least 30% reduction)."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q5",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "List the three main types of human research described in the lecture, and state what survey research collects.",
+          "type": "short",
+          "marks": 3,
+          "answer": "The three types are: (1) survey research - asking people about their knowledge, experience, attitudes and preferences; (2) observational research - including case, cross-sectional, case-control and cohort studies; and (3) experimental (interventional) research, in which an intervention is applied. Survey research collects self-reported information on knowledge, experience, attitudes and preference.",
+          "explanation": "Note that observational designs (case, cross-sectional, case-control, cohort) form one category, while experimental/interventional studies are distinct because the researcher applies an intervention."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q6",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "Distinguish field research from laboratory research, and state one advantage of each setting.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Field research is carried out outside the tightly controlled environment of a laboratory, offering greater real-world generalisability to natural settings. Laboratory research is conducted under more controlled conditions, permitting tighter control over the experiment and over confounding variables.",
+          "explanation": "The trade-off is ecological validity (field) versus experimental control (laboratory)."
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-q7",
+          "topic": "research-fundamentals",
+          "ai": true,
+          "question": "Classify each of the following research questions as qualitative or quantitative, justifying each answer: (1) What is the process of the ethics committee in making decisions about research protocols? (2) What is the prevalence of diabetes in obesity? (3) How do Tahitian women perceive health and fitness? (4) How does a head of school's leadership style impact employees' performance at university? (5) Can cholesterol be reduced by diet or exercise? (6) What factors positively impact employee turnover rates in a factory?",
+          "type": "extended",
+          "marks": 8,
+          "answer": "(1) Qualitative - it explores a process and meanings in decision-making, emphasising words and theory generation rather than measurement. (2) Quantitative - prevalence is a numerical measurement requiring counting and statistical analysis. (3) Qualitative - it seeks perceptions and lived experience from the women's own perspective, capturing meanings and beliefs. (4) Qualitative (or mixed) - it examines the impact of leadership style on performance through experiences and perspectives, though it could be approached quantitatively if performance were measured numerically; as framed it emphasises understanding meanings. (5) Quantitative - it tests a cause-and-effect relationship (diet/exercise intervention and cholesterol level) requiring numerical outcome measurement. (6) Qualitative - it explores factors and meanings behind turnover, though it could be quantified with turnover rates; as framed it seeks understanding of factors and perspectives. Full marks require correct classification plus justification based on whether the question emphasises words, meanings and theory generation (qualitative) or numbers, measurement and theory testing/cause-and-effect (quantitative).",
+          "explanation": "The key discriminator is whether the question requires numerical measurement and hypothesis testing (quantitative) or exploration of meanings, perceptions and processes (qualitative); some questions (4 and 6) can be framed either way, and credit is given for recognising this."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q0",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "In a case-control study, 30 of 32 cases were exposed and 160 of 366 controls were exposed. What is the odds ratio?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "0.05",
+            "1.86",
+            "18.56",
+            "37.50"
+          ],
+          "answer": 2,
+          "explanation": "OR = (30/2)/(160/198) = 15/0.808 = 18.56; the odds of exposure for cases is 18.6 times that of controls."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q1",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "What is the correct interpretation of a relative risk of 1.36?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Risk of disease is increased by 136%",
+            "Risk of disease is reduced by 36%",
+            "Risk of disease is increased by 36%",
+            "Risk of exposure is increased by 136%"
+          ],
+          "answer": 2,
+          "explanation": "Using (RR − 1) × 100 = 36%, the risk of disease is increased by 36% relative to the unexposed group."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q2",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "A sample has mean 40 and standard error 1.46. Which of the following is the 99% confidence interval?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "37.14 to 42.86",
+            "36.23 to 43.77",
+            "38.54 to 41.46",
+            "35.00 to 45.00"
+          ],
+          "answer": 1,
+          "explanation": "99% CI = 40 ± (1.46 × 2.58) = 40 ± 3.77 = 36.23 to 43.77. The 95% CI would be 40 ± (1.46 × 1.96) = 37.14 to 42.86."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q3",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "What happens to a confidence interval as the confidence level increases from 90% to 99%?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "It becomes narrower",
+            "It becomes wider",
+            "It stays the same width",
+            "It always contains zero"
+          ],
+          "answer": 1,
+          "explanation": "Greater confidence requires a larger critical value (90% < 95% < 99%), so the range of the CI becomes larger (e.g. 70-130 vs 80-120 vs 90-110 in the lecture example)."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q4",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "A class of 120 students has a mean systolic blood pressure of 100 mmHg with a standard error of the mean of 10. Calculate and report the 95% CI and the 68% CI.",
+          "type": "short",
+          "marks": 3,
+          "answer": "95% CI = 100 ± (10 × 1.96) = 100 ± 19.6, reported as 95% CI (80.4, 119.6). 68% CI = 100 ± (10 × 1) = 100 ± 10, reported as 68% CI (90, 110).",
+          "explanation": "CI = mean ± (SE × critical value); the critical value is 1.96 at 95% confidence and about 1 at 68% confidence."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q5",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "Interpret, in percentage terms, (i) an RR of 0.8 and (ii) an RR of 3.30.",
+          "type": "short",
+          "marks": 3,
+          "answer": "(i) RR = 0.8: the risk of the outcome in the exposed group was reduced by 20% relative to the unexposed group. (ii) RR = 3.30: the risk of the outcome in the exposed group was increased by 230% relative to the unexposed group; the outcome occurred 3.3 times as often as in the unexposed group.",
+          "explanation": "Percentage change = (RR − 1) × 100; for RR < 1 the value is negative, indicating a relative reduction."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q6",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "A patient with metabolic syndrome has an estimated baseline coronary artery disease (CAD) risk of 20%. A study reports RR = 0.39 (95% CI 0.19-0.78) for CAD in patients taking E/P. Estimate the patient's CAD probability on E/P and calculate the absolute risk reduction.",
+          "type": "short",
+          "marks": 4,
+          "answer": "Relative reduction = (1 − 0.39) × 100 = 61%. Estimated CAD risk on E/P = 0.2 × 0.39 = 0.078, i.e. 7.8%. Absolute risk reduction = 20% − 7.8% = 12.2 percentage points.",
+          "explanation": "The RR is applied to the individual's baseline risk to obtain the new absolute risk; the difference from baseline is the absolute reduction."
+        },
+        {
+          "id": "medi304-auto-mtzh236u-q7",
+          "topic": "or-rr-ci",
+          "ai": true,
+          "question": "Discuss how the threshold for a clinically impressive RR or OR varies with study design, and explain why baseline risk must be assessed before concluding that a given effect size is important. Use the lecture's RR = 3.0 examples in your answer.",
+          "type": "extended",
+          "marks": 8,
+          "answer": "A strong answer should state that the required magnitude depends on the level of evidence: in an RCT, where bias and confounding are minimised by randomisation, we would be satisfied with a small increase or decrease in risk; in a cohort study, subject to more confounding, an RR > 3 is suggested for a minor adverse event; in a case-control study, which is prone to recall and selection bias, an OR > 4 is suggested. It should then explain that the same RR can have very different clinical impact depending on baseline risk: with RR = 3.0, a baseline risk of 30% rising to 90% is clearly important, whereas a rise from 0.1% to 0.3%, though identical in relative terms, may not be important. Therefore clinicians must assess the baseline risk of their participants or patients and then draw a conclusion, rather than relying on the relative effect size alone. Reference to reporting RRs with 95% CIs (e.g. RR = 0.39, 95% CI 0.19-0.78) as an indicator of precision would strengthen the answer.",
+          "explanation": "This tests understanding that relative measures interact with study design (evidence hierarchy) and with absolute baseline risk to determine clinical importance."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q0",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "In SPSS, which page is used to define variable properties such as name, type and measurement level when setting up a new data sheet?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Data View",
+            "Variable View",
+            "Statistics Viewer",
+            "Output Explorer"
+          ],
+          "answer": 1,
+          "explanation": "The practical instructs students to work on the Variable View page to define variables; Data View is where the actual data values are entered."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q1",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "After sorting the Heightcm column in ascending order a student finds a value of 280 cm. What is the appropriate action?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Keep it since SPSS will automatically correct it",
+            "Exclude the erroneous value from analysis as it cannot be right",
+            "Convert the whole column to a string variable",
+            "Run the analysis twice, once with and once without all values unchanged"
+          ],
+          "answer": 1,
+          "explanation": "The practical uses sorting cases to expose impossible values (280 cm); such data errors need to be removed from the analysis."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q2",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "For the entered ages 25, 23, 26 and 29 (n = 4), the SPSS Descriptives output reports which of the following?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Mean 25.0, SD 2.5, min 23, max 29",
+            "Mean 25.75, SD 2.5, min 23, max 29",
+            "Mean 25.75, SD 5.0, min 23, max 29",
+            "Mean 26.0, SD 2.5, min 23, max 26"
+          ],
+          "answer": 1,
+          "explanation": "The Statistics Viewer output shows Mean = 25.75, Std Deviation = 2.5, minimum 23, maximum 29, n = 4."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q3",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "Describe the SPSS menu sequence to import data from an Excel file (e.g. 'Muesli Bar Cons') and state what should be done immediately after importing.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Go to File -> Import Data -> Excel, open the required Excel file (e.g. Muesli Bar Cons) and click OK, then save the imported data to a new SPSS file using Save/Save As with a new name.",
+          "explanation": "Importing creates a working copy in SPSS format, so it should be saved as a new file to preserve the original data."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q4",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "In the sample data entry task, explain why 'Name' is treated as a string/nominal variable while 'ID' is numeric-scale and 'Gender' is entered as the codes 1 and 2.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Names (Debbie, Paul, Jessica, Greg) are labels with no quantitative order, so they are string (nominal) data. ID is a numeric identifier measured on a scale-type variable (1, 2, 3, 4). Gender is a nominal category entered numerically by coding 1 = Male and 2 = Female so SPSS can process it.",
+          "explanation": "Choosing the correct variable type and coding scheme in Variable View determines how SPSS can analyse each variable."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q5",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "State the SPSS command sequence to (a) sort cases by one column such as 'disease' and (b) sort by two columns such as 'disease and gender'.",
+          "type": "short",
+          "marks": 3,
+          "answer": "(a) Data -> Sort Cases -> Sort by 'disease' -> Ascending -> OK. (b) Data -> Sort Cases -> Sort by 'disease' and 'gender' -> Ascending -> OK.",
+          "explanation": "Sort Cases allows one or more sort variables; with two variables the data are ordered within disease groups by gender."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q6",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "A student needs mean, standard deviation, minimum and maximum for the variable Age. Give the SPSS menu path and describe where the results appear.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Analyse -> Descriptive Statistics -> Descriptives, transfer 'Age' into the Variable(s) box and click OK. The results (e.g. mean 25.75, SD 2.5, min 23, max 29, n 4) appear in the Statistics Viewer.",
+          "explanation": "Descriptives is the basic procedure for summary statistics, and all SPSS output is displayed in the Statistics/Output Viewer."
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-q7",
+          "topic": "spss-essentials",
+          "ai": true,
+          "question": "Describe a practical workflow in SPSS for detecting and handling data entry errors before analysis, using the Heightcm example from the practical, and explain why this step is important for the validity of results.",
+          "type": "extended",
+          "marks": 8,
+          "answer": "A practical workflow: (1) Open the dataset (e.g. Bipolar49) via File -> Open -> Data. (2) Use Data -> Sort Cases, sort by the column of interest (e.g. Heightcm) in ascending (or descending) order and click OK, which brings extreme/impossible values to the top or bottom of the sheet. (3) Inspect the sorted column: a value such as 280 cm cannot be a real height, indicating a data entry error. (4) Correct the value if the true value can be verified, otherwise remove it from analysis. (5) Re-save the cleaned file with Save As so the original raw data are preserved. This is important because undetected errors act as outliers that distort summary statistics such as the mean and standard deviation and bias any subsequent analyses, threatening the validity of the study's conclusions.",
+          "explanation": "Sorting is a simple data-cleaning technique demonstrated in the practical: extreme values become visible and implausible entries (280 cm) can be excluded before descriptive or inferential analysis."
         }
       ],
       "cards": [
@@ -6210,6 +6721,230 @@
           "front": "Which study designs establish association but not causation by themselves?",
           "back": "Cross-sectional and case-control studies. Both are observational and cannot by themselves demonstrate causation.",
           "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c0",
+          "topic": "bias-validity-ebm",
+          "front": "What is internal validity?",
+          "back": "The extent to which a concept is accurately measured and the evidence supports a cause-and-effect claim. RCTs improve internal validity by controlling for confounding factors and bias.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c1",
+          "topic": "bias-validity-ebm",
+          "front": "What is external validity?",
+          "back": "The generalization of research outcomes to other populations, settings or treatments (e.g., population validity, ecological validity). It requires subjects who are representative of the population.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c2",
+          "topic": "measurements",
+          "front": "Face validity vs construct validity?",
+          "back": "Face validity: the procedure appears to test what it aims to test at face value. Construct validity: the test measures only the underlying theoretical concept, e.g., a depression test must not measure bipolar disorder or schizophrenia.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c3",
+          "topic": "measurements",
+          "front": "Concurrent vs predictive validity?",
+          "back": "Concurrent validity: the test is measured against a benchmark test, with high correlation indicating strong criterion validity. Predictive validity: the test predicts later performance on a related criterion.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c4",
+          "topic": "bias-validity-ebm",
+          "front": "List the main threats to internal validity.",
+          "back": "History, maturation (including fatigue), testing/practice effects, instrumentation and assessor changes, statistical factors (regression to the mean from extreme scores), selection bias, experimental mortality, selection-maturation interaction (PP vs ITT), and expectancy.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c5",
+          "topic": "bias-validity-ebm",
+          "front": "What are the threats to external validity?",
+          "back": "Small sample size (e.g., one class of 50 students cannot represent all university students) and selection bias (e.g., generalising Olympic athletes' heart rate variability to the general population).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c6",
+          "topic": "bias-validity-ebm",
+          "front": "How can threats to internal validity be controlled?",
+          "back": "Blinding of participants and researchers, random assignment to treatment and control groups, appropriate control group matching to the treatment group, and experimental manipulation of the independent variable.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-c7",
+          "topic": "bias-validity-ebm",
+          "front": "How do you improve external validity?",
+          "back": "Use inclusion and exclusion criteria so participants represent the population (including geographic considerations), ensure adequate sample size and population characteristics, and replicate the study in different samples or settings.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c0",
+          "topic": "research-fundamentals",
+          "front": "What are the three types of research questions?",
+          "back": "Basic (theoretical, curiosity-driven, no immediate application), applied (general public, solving practical problems) and clinical (involving particular patients/populations, interventions, prognostic factors or exposures).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c1",
+          "topic": "research-fundamentals",
+          "front": "Qualitative vs quantitative research - core distinction?",
+          "back": "Qualitative research emphasises words, generates theories and captures lived experience and subjective meanings; quantitative research emphasises numbers, tests theories and studies cause-and-effect relationships.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c2",
+          "topic": "research-fundamentals",
+          "front": "What are the three types of human research?",
+          "back": "Survey research (knowledge, experience, attitudes, preference), observational research (case, cross-sectional, case-control, cohort) and experimental/interventional research.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c3",
+          "topic": "research-fundamentals",
+          "front": "What must a good quantitative research topic include?",
+          "back": "A clearly formulated hypothesis that is quantitative and specific and predicts a relationship of a specific size (defined variables, outcome and effect size).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c4",
+          "topic": "research-fundamentals",
+          "front": "What is correlational research?",
+          "back": "A non-experimental method examining relationships between variables (e.g. music listening and blood pressure) without necessarily establishing cause and effect.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c5",
+          "topic": "research-fundamentals",
+          "front": "Field vs laboratory research?",
+          "back": "Field research is conducted outside the tightly controlled laboratory environment in real-world settings; laboratory research is conducted under more controlled conditions permitting tighter control over the experiment.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c6",
+          "topic": "research-fundamentals",
+          "front": "How is new knowledge delivered into medical research practice?",
+          "back": "Through applications of pathophysiological improvement, population-based improvement and behavioural improvement.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-c7",
+          "topic": "research-fundamentals",
+          "front": "Give an example of a clinical research question.",
+          "back": "e.g. 'How can cachexia be prevented in cancer patients receiving radiation and chemotherapy?' - it directly involves a particular patient population, problem and intervention.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c0",
+          "topic": "or-rr-ci",
+          "front": "What does an OR of 1, >1 and <1 indicate?",
+          "back": "OR = 1: no change in frequency of exposure; OR > 1: increased frequency of exposure among cases (exposure may increase disease risk); OR < 1: decreased frequency (possible protective effect).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c1",
+          "topic": "or-rr-ci",
+          "front": "State the odds ratio formula in a case-control study.",
+          "back": "OR = (exposed cases / unexposed cases) ÷ (exposed controls / unexposed controls) = (a/b)/(c/d).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c2",
+          "topic": "or-rr-ci",
+          "front": "State the relative risk formula.",
+          "back": "RR = [a/(a+b)] / [c/(c+d)] - the probability of the event in the exposed group divided by the probability in the non-exposed group.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c3",
+          "topic": "or-rr-ci",
+          "front": "How do you convert an RR into a percentage change in risk?",
+          "back": "(RR − 1) × 100. E.g. RR 3.30 = 230% increase (3.3 times as many outcomes); RR 0.39 = 61% reduction.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c4",
+          "topic": "or-rr-ci",
+          "front": "What are the critical values for 68%, 95% and 99% confidence intervals?",
+          "back": "Approximately 1 (68%), 1.96 (95%) and 2.58 (99%).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c5",
+          "topic": "or-rr-ci",
+          "front": "What is the formula for calculating a confidence interval around a mean?",
+          "back": "CI = mean ± (SE × critical value). E.g. mean 100, SE 10 gives 95% CI (80.4, 119.6).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c6",
+          "topic": "or-rr-ci",
+          "front": "Roughly how large should an effect be to be impressive, by study design?",
+          "back": "RCT: even a small increase or decrease in risk; cohort study: RR > 3 for a minor adverse event; case-control study: OR > 4.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh236u-c7",
+          "topic": "or-rr-ci",
+          "front": "Why must baseline risk be assessed when interpreting an RR?",
+          "back": "The same RR has different clinical impact depending on baseline risk: at RR = 3.0, going from 30% to 90% is important, but going from 0.1% to 0.3% may not be.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c0",
+          "topic": "spss-essentials",
+          "front": "Which SPSS page is used to define variables (name, type, measurement) and which is used to enter data?",
+          "back": "Variable View defines variable properties; Data View is where data values are entered.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c1",
+          "topic": "spss-essentials",
+          "front": "Menu path to import an Excel file into SPSS?",
+          "back": "File -> Import Data -> Excel -> open the file (e.g. Muesli Bar Cons) -> OK, then save to a new file.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c2",
+          "topic": "spss-essentials",
+          "front": "Menu path to open an existing SPSS data file such as Bipolar49?",
+          "back": "File -> Open -> Data -> select 'Bipolar49' -> Open; use Save As to give it a new name.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c3",
+          "topic": "spss-essentials",
+          "front": "How do you sort cases in SPSS by one or two columns?",
+          "back": "Data -> Sort Cases -> choose sort variable(s) (e.g. disease, or disease and gender) -> Ascending -> OK.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c4",
+          "topic": "spss-essentials",
+          "front": "How can sorting cases help find data entry errors?",
+          "back": "Sorting a column (e.g. Heightcm) ascending brings extreme values into view; an impossible value like 280 cm can then be removed from analysis.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c5",
+          "topic": "spss-essentials",
+          "front": "How do you insert a new column (variable) in SPSS?",
+          "back": "Edit -> Insert Variable.",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c6",
+          "topic": "spss-essentials",
+          "front": "Why are names like Debbie or Paul nominal/string data while ID is numeric-scale?",
+          "back": "Names are categorical labels with no numeric meaning (string/nominal); ID is entered as a numeric scale variable (1, 2, 3, 4). Gender can be coded numerically (1 = Male, 2 = Female).",
+          "ai": true
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-c7",
+          "topic": "spss-essentials",
+          "front": "SPSS path for basic descriptive statistics and where output appears?",
+          "back": "Analyse -> Descriptive Statistics -> Descriptives, move the variable (e.g. Age) to the Variable(s) box, click OK; results appear in the Statistics Viewer.",
+          "ai": true
         }
       ],
       "notes": [
@@ -6640,6 +7375,47 @@
           "body": "This quiz reviews the family of observational designs. A **case report** documents a novel and significant finding, while a **case series** collects multiple cases with similar or unusual findings; because neither has experimental allocation or an appropriate control group, they serve to **generate hypotheses**, not prove treatment efficacy. **Cross-sectional (prevalence) studies** examine data at one point in time - as in the obesity example testing the association between **BMI** and body-fat percentage (weight alone fails because height influences it). **Case-control studies** compare people with and without an outcome, look retrospectively at exposure, use the **odds ratio**, and are efficient for **rare diseases**. **Cohort studies** enrol disease-free participants, measure exposure, then follow them longitudinally to record outcomes, allowing multiple outcomes to be examined. Both cross-sectional and case-control designs establish association but not causation by themselves.",
           "topics": [
             "research-design"
+          ]
+        },
+        {
+          "id": "medi304-auto-mtzgz15p-n0",
+          "title": "Internal and External Validity",
+          "source": "auto-synced from Moodle",
+          "added": "2026-09-13",
+          "body": "This lecture distinguishes **internal validity** - accurately measuring a concept and supporting a **causal** claim, which RCTs strengthen by controlling **confounding** and bias - from **external validity**, the **generalizability** of outcomes to other populations, settings and treatments (population and ecological validity). Measurement validity types include **face validity**, **construct validity**, **content validity**, and criterion validity split into **concurrent** (against a benchmark test) and **predictive** (later performance) validity. Threats to internal validity include **history**, **maturation** (e.g., child growth, fatigue), **testing** effects, **instrumentation** and assessor changes, statistical factors (**regression to the mean** from extreme scores), **selection bias**, **experimental mortality** (differential dropout), the **selection-maturation interaction** (relevant to **PP vs ITT** reporting) and **expectancy**. External validity is threatened by **small sample size** and selection bias, such as generalising from one class or from Olympic athletes to the general population. Overall, **randomization**, an appropriate **control group**, inclusion/exclusion criteria limiting extraneous variables, adequate sample size, and **replication** in representative samples enhance both internal and external validity.",
+          "topics": [
+            "bias-validity-ebm",
+            "measurements"
+          ]
+        },
+        {
+          "id": "medi304-auto-mtzh0ij7-n0",
+          "title": "MEDI304 - Introduction: Foundations of Research",
+          "source": "auto-synced from Moodle",
+          "added": "2026-09-13",
+          "body": "This lecture defines research as a **systematic process** to increase knowledge by gathering information, judging existing data and generating new knowledge. Research questions are classified as **basic** (theoretical, curiosity-driven), **applied** (solving practical problems for the general public) or **clinical** (involving patients, populations, interventions or exposures), while human research takes the form of **survey**, **observational** (case, cross-sectional, case-control, cohort) or **experimental** studies. **Qualitative research** emphasises words and theory generation, whereas **quantitative research** emphasises numbers, theory testing and cause-and-effect. A good quantitative topic requires a **specific hypothesis predicting a relationship of a specific size**, illustrated by refining the vague breast-feeding question into one specifying exposure duration, outcome and at least 30% risk reduction. The lecture closes by contrasting **correlational** (non-experimental, no causation) with **causal** (experimental) research, and **field** with **laboratory** research settings.",
+          "topics": [
+            "research-fundamentals"
+          ]
+        },
+        {
+          "id": "medi304-auto-mtzh236u-n0",
+          "title": "Measurements 1-3: Odds Ratio, Relative Risk and Confidence Intervals",
+          "source": "auto-synced from Moodle",
+          "added": "2026-09-13",
+          "body": "This file covers three core epidemiological measures: the **odds ratio (OR)**, **relative risk (RR)** and **confidence interval (CI)**. The **OR**, calculated as (a/b)/(c/d), is the standard measure of association for **case-control studies**, illustrated by milestone studies linking tobacco to lung cancer, maternal stilbestrol to vaginal cancer and HPV to oropharyngeal cancer. The **RR** compares event probabilities in exposed versus non-exposed groups, is converted to a percentage change via (RR − 1) × 100, and its clinical importance depends on the **baseline risk** of participants. A **CI** expresses the precision of an estimate and is computed as mean ± (SE × critical value), widening as confidence rises from 95% (critical value 1.96) to 99% (2.58).",
+          "topics": [
+            "or-rr-ci"
+          ]
+        },
+        {
+          "id": "medi304-auto-mtzh3aup-n0",
+          "title": "MEDI304 P1 - Introduction to SPSS",
+          "source": "auto-synced from Moodle",
+          "added": "2026-09-13",
+          "body": "This practical covers the core **SPSS** workflow: creating a new data sheet in **Variable View**, opening existing files (e.g. Bipolar49) via File -> Open -> Data, and importing Excel data via File -> Import Data -> Excel, saving to a new file. **Data editing** skills include **Sort Cases** by one or more columns (e.g. disease and gender), inserting a variable with Edit -> Insert Variable, and using sorting to detect **data entry errors** such as an impossible height of 280 cm that must be removed from analysis. Sample data entry distinguishes **string/nominal** variables (names), numeric **scale** IDs, and coded categories (Gender: 1 = Male, 2 = Female). Basic **descriptive statistics** for Age (Analyse -> Descriptive Statistics -> Descriptives) produced Mean = 25.75, **SD** = 2.5, min 23, max 29, n = 4 in the **Statistics Viewer**.",
+          "topics": [
+            "spss-essentials"
           ]
         }
       ]

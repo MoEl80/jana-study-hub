@@ -731,6 +731,56 @@
             "Distinguish mitochondrial tRNA mutations (MERRF, tRNA-related type II diabetes) from Complex I mutations (LHON) in terms of ATP production and tissue-specific pathology."
           ],
           "ai": true
+        },
+        {
+          "id": "student-mobility",
+          "title": "Study overseas: exchange, short courses, internships & credit",
+          "outcomes": [
+            "auto-synced"
+          ],
+          "bigIdea": "Successfully planning overseas study requires understanding eligibility rules, program types, funding schemes and how host-university study converts into UOW credit.",
+          "keyKnowledge": [
+            "Semester exchange allows one or two semesters at a UOW partner university, with over 185 partners in 46 countries.",
+            "Eligibility requires completion of at least 48 credit points (one year full-time) and good academic standing: a minimum Credit average (65 WAM) with no subjects completed below a Pass.",
+            "Application deadlines differ by region: for Europe/UK/Latin America, Autumn 2027 closes 21 August 2026 and Spring 2027 closes 20 March 2027; for USA/Canada/Asia, Spring 2027 closes 23 January 2027 (Autumn 2027 closed).",
+            "Three program types exist: Faculty-led Programs (study tours run through the faculty for a UOW subject), Programs at Partner Universities (fees paid directly to the host), and UOW Third Party Partners (study at an external organisation for UOW credit).",
+            "Short Courses and Internships run during summer and winter breaks for 1-8 weeks, with deadlines that vary by program.",
+            "Tuition for semester exchanges is paid to UOW, and each semester abroad counts as a full-time 24-credit point UOW semester regardless of subjects taken.",
+            "Funding includes the UOW Travel Grant ($500-$1,000), an OS-HELP loan of up to $10,130 added to HECS/HELP debt, and New Colombo Plan grants of $3,000-$10,000 for study in Asia and the Indo-Pacific, all subject to eligibility checks.",
+            "Credit for prior learning comes in two forms: unspecified credit (host subject has no UOW equivalent but is relevant, granted at a particular level such as 200-level) and specified credit (host subject is substantially the same as a UOW subject); approval involves the faculty and usually requires host subject outlines, with approved credit processed at the end of the exchange."
+          ],
+          "keyTerms": [
+            {
+              "term": "WAM (65 Credit average)",
+              "definition": "The minimum academic standard required for exchange: a Credit average of 65 Weighted Average Mark, with no subjects completed below a Pass."
+            },
+            {
+              "term": "OS-HELP",
+              "definition": "A loan of up to $10,130 for overseas study that is added to a student's HECS/HELP debt."
+            },
+            {
+              "term": "New Colombo Plan (NCP)",
+              "definition": "A grant scheme offering $3,000-$10,000 for study in the Asia and Indo-Pacific region."
+            },
+            {
+              "term": "Specified credit",
+              "definition": "Credit granted when a host-university subject is substantially the same or equivalent to a subject offered by UOW."
+            },
+            {
+              "term": "Unspecified credit",
+              "definition": "Credit granted at a particular level (e.g., 200-level) for a set number of credit points when the host subject has no direct UOW equivalent but is still relevant to the degree."
+            },
+            {
+              "term": "Faculty-led Program",
+              "definition": "A short study tour run through the faculty that counts towards a UOW subject."
+            }
+          ],
+          "examFocus": [
+            "Comparing specified versus unspecified credit for prior learning and when each applies.",
+            "Summarising eligibility criteria and application timelines for semester exchange by region.",
+            "Outlining the funding options (Travel Grant, OS-HELP, New Colombo Plan) with their amounts and conditions."
+          ],
+          "ai": true
         }
       ],
       "questions": [
@@ -3906,6 +3956,68 @@
           "marks": 8,
           "answer": "G6PD catalyses the NADPH-generating step of the oxidative pentose phosphate pathway. In G6PD deficiency, less NADPH is produced, so glutathione reductase has insufficient NADPH to regenerate reduced glutathione, lowering the cell's reducing capacity. As a result, oxidative damage from reactive oxygen species accumulates. Malaria parasites are susceptible to this because they infect erythrocytes, which are themselves prone to oxidative stress, so the parasite cannot survive in the oxidatively stressed red cell environment. Conversely, the same reduced antioxidant capacity makes G6PD-deficient individuals sensitive to oxidative chemicals and foods such as divicine in fava beans.",
           "explanation": "Full-credit answers must link G6PD deficiency to reduced NADPH, reduced glutathione, accumulated ROS damage, and the erythrocyte tropism of malaria."
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-q0",
+          "topic": "student-mobility",
+          "ai": true,
+          "question": "What is the minimum academic standing required to go on a semester exchange?",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "A Pass average (50 WAM) with no fails",
+            "A Credit average (65 WAM) with no subjects below a Pass",
+            "A Distinction average (75 WAM)",
+            "Completion of 24 credit points at any grade"
+          ],
+          "answer": 1,
+          "explanation": "The file states students must be of good academic standing with a minimum Credit average (65 WAM) and no subjects completed below a Pass, plus at least 48 credit points completed."
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-q1",
+          "topic": "student-mobility",
+          "ai": true,
+          "question": "For a semester exchange, tuition fees are paid to UOW and each semester abroad equals:",
+          "type": "mcq",
+          "marks": 1,
+          "options": [
+            "Whatever credit points the host subjects carry",
+            "A part-time 12-credit point semester",
+            "A full-time 24-credit point semester at UOW regardless of subjects taken",
+            "No credit points until faculty approval"
+          ],
+          "answer": 2,
+          "explanation": "The text states each semester abroad equals a full-time 24-credit point semester at UOW, regardless of subjects taken, with tuition paid to UOW."
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-q2",
+          "topic": "student-mobility",
+          "ai": true,
+          "question": "Distinguish between specified and unspecified credit for prior learning in the context of overseas study.",
+          "type": "short",
+          "marks": 4,
+          "answer": "Specified credit is granted when a subject offered by the host university is substantially the same or equivalent to a subject offered by UOW, so it maps directly to a named UOW subject. Unspecified credit is given when the host institution's subject does not correspond with any UOW subject but is still relevant to the degree; it is granted at a particular level (e.g., 200-level) for a certain number of credit points rather than for a named subject.",
+          "explanation": "Both definitions come directly from the file's Credit for Prior Learning section."
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-q3",
+          "topic": "student-mobility",
+          "ai": true,
+          "question": "State the two main eligibility requirements for a UOW semester exchange and give the Spring 2027 application deadline for Europe/UK/Latin America.",
+          "type": "short",
+          "marks": 3,
+          "answer": "Students must have completed at least 48 credit points (one year full-time) by the time they go overseas, and be of good academic standing: a minimum Credit average (65 WAM) with no subjects completed below a Pass. The Spring 2027 application deadline for Europe/UK/Latin America is 20 March 2027.",
+          "explanation": "Eligibility and deadlines are stated explicitly; note the USA/Canada/Asia Spring 2027 deadline differs (23 January 2027)."
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-q4",
+          "topic": "student-mobility",
+          "ai": true,
+          "question": "Describe the three main funding opportunities for overseas study available to UOW students, including amounts, conditions and any regional restrictions, and explain how approved credit from exchange is processed.",
+          "type": "extended",
+          "marks": 8,
+          "answer": "The UOW Travel Grant offers $500-$1,000 to eligible students. The OS-HELP loan provides up to $10,130, which is added to the student's HECS/HELP debt and so must be repaid. The New Colombo Plan (NCP) offers grants of $3,000-$10,000, but only for study in the Asia and Indo-Pacific region. All funding is subject to eligibility checks. For credit: students research required UOW subjects, find host-university equivalents, prepare a short-list and discuss it with their Head of Students to ensure degree requirements can still be met, then apply for credit; the submission goes to the faculty for approval (host subject outlines are usually required), and approved credit is processed at the end of the exchange.",
+          "explanation": "A strong answer covers all three schemes with amounts/conditions and the credit application-and-approval workflow."
         }
       ],
       "cards": [
@@ -5693,6 +5805,48 @@
           "front": "What are the consequences of fructose 1,6-bisphosphatase-1 (FBP) deficiency?",
           "back": "Gluconeogenesis is blocked but glycolysis continues, causing overproduction of pyruvate and lactate. This results in hypoglycaemia and lactic acidosis.",
           "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c0",
+          "topic": "student-mobility",
+          "front": "What are the eligibility requirements for a semester exchange?",
+          "back": "At least 48 credit points (one year full-time) completed by departure, and good academic standing: a minimum Credit average (65 WAM) with no subjects completed below a Pass.",
+          "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c1",
+          "topic": "student-mobility",
+          "front": "How long can Short Courses and Internships run, and when do they take place?",
+          "back": "They take place during the summer and winter breaks between semesters and can be 1-8 weeks in duration; application deadlines vary.",
+          "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c2",
+          "topic": "student-mobility",
+          "front": "What are the three types of overseas programs offered?",
+          "back": "Faculty-led Programs (study tours through the faculty for a UOW subject), Programs at Partner Universities (fees paid directly to the host university), and UOW Third Party Partners (study at an external organisation for UOW credit).",
+          "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c3",
+          "topic": "student-mobility",
+          "front": "What is the New Colombo Plan grant?",
+          "back": "Grants of $3,000-$10,000 for study in the Asia and Indo-Pacific region, subject to eligibility checks.",
+          "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c4",
+          "topic": "student-mobility",
+          "front": "What is the maximum OS-HELP loan amount?",
+          "back": "Up to $10,130, which is added to the student's HECS/HELP debt.",
+          "ai": true
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-c5",
+          "topic": "student-mobility",
+          "front": "What is the difference between specified and unspecified credit?",
+          "back": "Specified credit applies when the host subject is substantially equivalent to a UOW subject; unspecified credit applies when there is no UOW equivalent but the subject is still relevant, granted at a level (e.g., 200-level) for a set number of credit points.",
+          "ai": true
         }
       ],
       "notes": [
@@ -6047,6 +6201,16 @@
             "ppp",
             "gluconeogenesis-glycogen",
             "respiration"
+          ]
+        },
+        {
+          "id": "biol214-auto-mtzgxnlx-n0",
+          "title": "BIOL214 - Student Mobility: Semester Exchange, Short Courses and Internships",
+          "source": "auto-synced from Moodle",
+          "added": "2026-09-13",
+          "body": "This administrative file outlines UOW **student mobility** options: semester exchanges at 185+ partner universities in 46 countries, plus **short courses and internships** of 1-8 weeks during breaks. Eligibility requires 48 credit points completed and a **Credit average (65 WAM)** with no fails, with region-specific deadlines (e.g., Europe/UK/Latin America Autumn 2027 closes 21 August 2026). Tuition for exchanges is paid to UOW and each semester abroad equals a **24-credit point** load. Funding includes the **UOW Travel Grant** ($500-$1,000), an **OS-HELP** loan up to $10,130, and **New Colombo Plan** grants of $3,000-$10,000 for Asia/Indo-Pacific study. Overseas study converts to credit as either **specified** (host subject equivalent to a UOW subject) or **unspecified** credit (granted at a level), approved by the faculty and processed at the end of the exchange. It contains no biochemistry content relevant to other BIOL214 topics.",
+          "topics": [
+            "student-mobility"
           ]
         }
       ]
