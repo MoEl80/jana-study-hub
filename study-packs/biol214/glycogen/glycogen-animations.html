@@ -1,0 +1,530 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glycogen in Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a lab "viewing stage" — one wide animation stage, transport controls under it, the step list as a readable column beside/below. */
+:root {
+  --bg: #f5f6f9; --panel: #ffffff; --ink: #1c2230; --muted: #596175; --line: #d7dbe4;
+  --glc: #b8316e; --glc-t: #f7dce8;          /* glucose / glycogen: PAS-stain magenta */
+  --build: #0c7a78; --build-t: #d6efed;      /* glycogenesis, fed, insulin */
+  --break: #b8620c; --break-t: #fbe8d3;      /* glycogenolysis, fasting, glucagon */
+  --phos: #6448b8; --phos-t: #e6e0f6;        /* phosphate */
+  --udp: #2d68ad; --udp-t: #dbe7f5;          /* UDP / UTP carriers */
+  --blood: #c03a3a; --blood-t: #f8e0e0;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141b; --panel: #191e28; --ink: #e8eaf0; --muted: #9ea6b8; --line: #2d3443;
+    --glc: #e46d9f; --glc-t: #3d1c2c; --build: #3cb8b1; --build-t: #10302f;
+    --break: #eb9a4f; --break-t: #3a2611; --phos: #a792ec; --phos-t: #292242;
+    --udp: #6ea5e8; --udp-t: #172a42; --blood: #e57373; --blood-t: #3a1a1d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141b; --panel: #191e28; --ink: #e8eaf0; --muted: #9ea6b8; --line: #2d3443;
+  --glc: #e46d9f; --glc-t: #3d1c2c; --build: #3cb8b1; --build-t: #10302f;
+  --break: #eb9a4f; --break-t: #3a2611; --phos: #a792ec; --phos-t: #292242;
+  --udp: #6ea5e8; --udp-t: #172a42; --blood: #e57373; --blood-t: #3a1a1d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; margin: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 40px; display: grid; gap: 18px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 .b { color: var(--build); } h1 .k { color: var(--break); }
+.lede { margin: 0; max-width: 68ch; color: var(--muted); }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { font: 700 15px var(--body); padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.tab .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.tab[aria-selected="true"] { border-color: var(--c); background: var(--ct); }
+.tab:focus-visible, .ctl:focus-visible, .step:focus-visible, input:focus-visible { outline: 3px solid var(--udp); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
+.stagebox { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-width: 0; }
+svg#stage { display: block; width: 100%; height: auto; font-family: var(--body); }
+.caption { border-top: 1px solid var(--line); padding: 12px 16px; min-height: 76px; display: grid; gap: 2px; }
+.caption .tag { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; }
+.caption p { margin: 0; font-size: 17px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 16px 14px; }
+.ctl { font: 700 14px var(--body); border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+.ctl[aria-pressed="true"] { border-color: var(--ink); }
+#scrub { flex: 1 1 200px; accent-color: var(--glc); min-width: 0; }
+.time { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+aside { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; min-width: 0; }
+aside h2 { font-family: var(--display); font-size: 20px; margin: 0; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.step { width: 100%; text-align: left; font: 15px/1.4 var(--body); color: var(--ink); background: transparent; border: 1.5px solid transparent; border-radius: 10px; padding: 8px 10px; cursor: pointer; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; }
+.step .n { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 1px; }
+.step.on { border-color: var(--c); background: var(--ct); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--c); background: var(--ct); }
+.rule { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 6px; }
+.rule strong { font-family: var(--display); font-size: 18px; }
+/* SVG classes */
+.hex { fill: var(--glc-t); stroke: var(--glc); stroke-width: 2; }
+.hex.hl { stroke: var(--build); stroke-width: 3.2; }
+.hex.free { fill: var(--panel); }
+.bond { stroke: var(--glc); stroke-width: 2.4; }
+.ph { fill: var(--phos); } .phl { fill: #fff; font: 700 9px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.udp { fill: var(--udp-t); stroke: var(--udp); stroke-width: 1.6; } .udpl { fill: var(--udp); font: 700 9px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.pill rect { stroke-width: 1.6; } .pill text { font: 700 12.5px var(--body); text-anchor: middle; dominant-baseline: central; }
+.lbl { fill: var(--muted); font: 12px var(--body); } .lbl.b { font-weight: 700; } .lbl.mono { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; }
+.ink { fill: var(--ink); } .muted { fill: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .tab, .step { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">BIOL214 · Week 4 · Glycogen metabolism</div>
+    <h1>Glycogen in motion: <span class="b">build it</span>, <span class="k">break it</span></h1>
+    <p class="lede">Three short animations. Press play and read the caption under each scene. You can tap any step on the list to jump straight to it.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Choose an animation">
+    <button class="tab" role="tab" id="tab-build" data-scene="build" style="--c:var(--build);--ct:var(--build-t)"><span class="dot"></span>1 · Glycogenesis (build)</button>
+    <button class="tab" role="tab" id="tab-break" data-scene="break" style="--c:var(--break);--ct:var(--break-t)"><span class="dot"></span>2 · Glycogenolysis (break)</button>
+    <button class="tab" role="tab" id="tab-switch" data-scene="switch" style="--c:var(--phos);--ct:var(--phos-t)"><span class="dot"></span>3 · The hormone switch</button>
+  </div>
+
+  <div class="main">
+    <div class="stagebox">
+      <svg id="stage" viewBox="0 0 960 540" role="img" aria-labelledby="cap-text"></svg>
+      <div class="caption" aria-live="polite">
+        <span class="tag" id="cap-tag">Step</span>
+        <p id="cap-text">Loading…</p>
+      </div>
+      <div class="controls">
+        <button class="ctl" id="play" aria-pressed="false">Play</button>
+        <button class="ctl" id="restart">Restart</button>
+        <button class="ctl" id="slow" aria-pressed="false">Slow motion</button>
+        <input type="range" id="scrub" min="0" max="19" step="0.01" value="0" aria-label="Animation time">
+        <span class="time" id="clock">0.0 s</span>
+      </div>
+    </div>
+    <aside>
+      <h2 id="steps-title">Steps</h2>
+      <ol class="steps" id="steps"></ol>
+      <div class="legend" aria-label="Colour key">
+        <span><i class="sw" style="--c:var(--glc);--ct:var(--glc-t)"></i>glucose</span>
+        <span><i class="sw" style="--c:var(--phos);--ct:var(--phos)"></i>phosphate (P)</span>
+        <span><i class="sw" style="--c:var(--udp);--ct:var(--udp-t)"></i>UDP / UTP</span>
+        <span><i class="sw" style="--c:var(--build);--ct:var(--build-t)"></i>build / fed</span>
+        <span><i class="sw" style="--c:var(--break);--ct:var(--break-t)"></i>break / fasting</span>
+      </div>
+    </aside>
+  </div>
+
+  <div class="rule">
+    <strong>The one rule to remember</strong>
+    <span>Phosphate <b>on</b> the enzymes = glycogen breakdown <b>on</b> and glycogen building <b>off</b> (glucagon and adrenaline do this). Phosphate <b>off</b> = building on, breakdown off (insulin does this).</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  const W = 960, H = 540;
+  const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  const lerp = (a, b, u) => a + (b - a) * u;
+  const f1 = n => n.toFixed(1);
+  // piecewise keyframes: [[time, x, y], ...]
+  function kf(t, k) {
+    if (t <= k[0][0]) return [k[0][1], k[0][2]];
+    for (let i = 1; i < k.length; i++) if (t <= k[i][0]) {
+      const a = k[i - 1], b = k[i], u = ease((t - a[0]) / (b[0] - a[0] || 1));
+      return [lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
+    }
+    const l = k[k.length - 1]; return [l[1], l[2]];
+  }
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+  // ---------- glyphs ----------
+  function hex(x, y, r = 11, cls = '', op = 1) {
+    let p = '';
+    for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); p += f1(x + r * Math.cos(a)) + ',' + f1(y + r * Math.sin(a)) + ' '; }
+    return `<polygon points="${p}" class="hex ${cls}" opacity="${op}"/>`;
+  }
+  const phos = (x, y, op = 1, r = 7) => `<g opacity="${op}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" class="ph"/><text x="${f1(x)}" y="${f1(y)}" class="phl">P</text></g>`;
+  const udpTag = (x, y, op = 1, txt = 'UDP') => `<g opacity="${op}"><rect x="${f1(x)}" y="${f1(y - 7)}" width="30" height="14" rx="7" class="udp"/><text x="${f1(x + 15)}" y="${f1(y)}" class="udpl">${txt}</text></g>`;
+  // C6 sits upper-left, C1 on the right of the ring
+  const C6 = [-10, -15], C1 = [15, 3];
+  function glucose(x, y, o = {}) {
+    let s = hex(x, y, 11, o.cls || '', o.op ?? 1);
+    if (o.p) { const off = o.p === 6 ? C6 : o.p === 1 ? C1 : o.p; s += phos(x + off[0], y + off[1], o.op ?? 1); }
+    if (o.udp) s += udpTag(x + 11, y + 3, o.op ?? 1);
+    return s;
+  }
+  function pill(x, y, text, col, on, op = 1, badge) {
+    const lines = text.split('\n'); const w = Math.max(...lines.map(l => l.length)) * 7.1 + 22; const h = lines.length * 16 + 10;
+    let s = `<g class="pill" opacity="${op}"><rect x="${f1(x - w / 2)}" y="${f1(y - h / 2)}" width="${f1(w)}" height="${h}" rx="10" style="fill:${on ? `var(--${col}-t)` : 'var(--panel)'};stroke:${on ? `var(--${col})` : 'var(--line)'}"/>`;
+    lines.forEach((l, i) => s += `<text x="${f1(x)}" y="${f1(y - (lines.length - 1) * 8 + i * 16)}" style="fill:${on ? `var(--${col})` : 'var(--muted)'}">${esc(l)}</text>`);
+    if (badge) s += `<circle cx="${f1(x - w / 2)}" cy="${f1(y - h / 2)}" r="10" style="fill:var(--${col})"/><text x="${f1(x - w / 2)}" y="${f1(y - h / 2)}" style="fill:var(--panel);font:700 11px var(--mono)">${badge}</text>`;
+    return s + '</g>';
+  }
+  const text = (x, y, s, cls = 'lbl', anchor = 'start', op = 1, style = '') => `<text x="${f1(x)}" y="${f1(y)}" class="${cls}" text-anchor="${anchor}" opacity="${op}" style="${style}">${esc(s)}</text>`;
+  const line = (x1, y1, x2, y2, cls = 'bond', op = 1, style = '') => `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" class="${cls}" opacity="${op}" style="${style}"/>`;
+  function vessel(x, y, w, h, t, label) {
+    let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" style="fill:var(--blood-t);stroke:var(--blood);stroke-width:1.5;stroke-opacity:.5"/>`;
+    for (let i = 0; i < 5; i++) { const yy = y + 20 + ((i * h / 5 + t * 28) % (h - 40)); s += `<ellipse cx="${x + w / 2 + (i % 2 ? 14 : -14)}" cy="${f1(yy)}" rx="11" ry="6" style="fill:var(--blood);opacity:.35"/>`; }
+    return s + text(x + w / 2, y - 10, label, 'lbl mono', 'middle');
+  }
+  const arrow = (x1, y1, x2, y2, col = 'muted', op = 1, dash = '') => {
+    const a = Math.atan2(y2 - y1, x2 - x1), hx = x2 - 9 * Math.cos(a), hy = y2 - 9 * Math.sin(a);
+    return `<g opacity="${op}"><line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(hx)}" y2="${f1(hy)}" style="stroke:var(--${col});stroke-width:2;${dash ? 'stroke-dasharray:' + dash : ''}"/><polygon points="${f1(x2)},${f1(y2)} ${f1(hx - 5 * Math.sin(a))},${f1(hy + 5 * Math.cos(a))} ${f1(hx + 5 * Math.sin(a))},${f1(hy - 5 * Math.cos(a))}" style="fill:var(--${col})"/></g>`;
+  };
+
+  // ---------- Scene 1: glycogenesis ----------
+  const A = {
+    dur: 19, col: 'build', title: 'Glycogenesis — making glycogen',
+    steps: [
+      [0, 1.8, 'In', 'Glucose enters the cell from the blood through a GLUT transporter (GLUT2 in liver, GLUT4 in muscle).'],
+      [1.8, 3.1, '1', 'Hexokinase (glucokinase in liver) puts a phosphate from ATP on carbon 6 → glucose-6-phosphate. The charged sugar is now trapped in the cell.'],
+      [3.1, 4.5, '2', 'Phosphoglucomutase moves the phosphate from carbon 6 to carbon 1 → glucose-1-phosphate.'],
+      [4.5, 6.4, '3', 'UDP-glucose pyrophosphorylase joins glucose-1-P to UTP → UDP-glucose, the “activated” glucose. The leftover PPi is split into 2 Pi, which pushes the reaction forward.'],
+      [6.4, 14.3, '4', 'Glycogen synthase adds the glucose to the end of a chain with an α-1,4 bond, and UDP is released. This repeats again and again. (Glycogenin made the very first short chain, the primer.)'],
+      [14.3, 19, '5', 'Branching enzyme cuts off a block of about 7 glucose from a long chain and re-attaches it lower down with an α-1,6 bond. Now there are two ends to add glucose to.'],
+    ],
+    render(t) {
+      let o = '';
+      const chainY = 400, x0 = 646, dx = 26, cx = i => x0 + i * dx;
+      o += vessel(20, 70, 100, 400, t, 'BLOOD');
+      o += `<line x1="150" y1="60" x2="150" y2="280" style="stroke:var(--line);stroke-width:8"/><line x1="150" y1="320" x2="150" y2="490" style="stroke:var(--line);stroke-width:8"/>`;
+      o += `<rect x="140" y="280" width="20" height="40" rx="5" style="fill:var(--build-t);stroke:var(--build);stroke-width:1.6"/>` + text(150, 338, 'GLUT', 'lbl mono', 'middle');
+      o += text(170, 50, 'INSIDE A LIVER OR MUSCLE CELL', 'lbl mono');
+      // stations
+      const act = (a, b) => [0, 1, 2].some(k => { const u = t - 3.2 * k; return u >= a && u <= b; });
+      o += pill(250, 372, 'Hexokinase', 'build', act(1.6, 2.9), 1, '1');
+      o += pill(380, 372, 'Phospho-\nglucomutase', 'build', act(2.9, 4.2), 1, '2');
+      o += pill(520, 372, 'UDP-glucose\npyrophosphorylase', 'build', act(4.4, 6.2), 1, '3');
+      o += pill(770, 455, 'Glycogen synthase', 'build', act(6.2, 7.3), 1, '4');
+      o += pill(760, 300, 'Branching enzyme', 'build', t > 14.3, seg(t, 14.3, 14.8), '5');
+      // glycogenin + chain
+      o += `<rect x="611" y="391" width="18" height="18" rx="4" style="fill:var(--udp-t);stroke:var(--udp);stroke-width:1.6"/>` + text(620, 432, 'glycogenin', 'lbl', 'middle');
+      let n = 8; [0, 1, 2].forEach(k => { if (t - 3.2 * k >= 7) n++; });
+      // unit positions (branching moves units 4..10)
+      const mv = ease(seg(t, 16, 17.4));
+      const pos = i => {
+        if (n === 11 && i >= 4) {
+          const bx = cx(1) + (i - 4) * dx, by = chainY - 36;
+          return [lerp(cx(i), bx, mv), lerp(chainY, by, mv) - Math.sin(Math.PI * mv) * 46];
+        }
+        return [cx(i), chainY];
+      };
+      const hl = n === 11 && t > 14.5 && t < 17.8;
+      o += line(629, chainY, cx(0) - 11, chainY);
+      for (let i = 1; i < n; i++) {
+        if (i === 4 && n === 11 && t > 15.3) continue; // bond cut
+        const [ax, ay] = pos(i - 1), [bx, by] = pos(i);
+        o += line(ax, ay, bx, by);
+      }
+      if (n === 11 && t > 15.3) {
+        const cut = seg(t, 15.3, 15.9);
+        if (cut < 1) o += text(cx(3) + 13, chainY + 28, '✂', 'lbl', 'middle', 1 - cut, 'font-size:20px;fill:var(--build)');
+        o += line(cx(1), chainY - 11, pos(4)[0], pos(4)[1] + 11, 'bond', seg(t, 17.2, 17.5));
+        o += text(cx(1) - 16, chainY - 16, 'α-1,6', 'lbl b', 'end', seg(t, 17.4, 17.8), 'fill:var(--build)');
+      }
+      for (let i = 0; i < n; i++) { const [x, y] = pos(i); o += hex(x, y, 11, hl && i >= 4 ? 'hl' : ''); }
+      o += text(cx(2), chainY + 30, 'α-1,4 bonds', 'lbl', 'middle', 1 - seg(t, 14.3, 14.6));
+      if (t > 17.6) {
+        o += text(cx(3) + 18, chainY + 4, '← end 1', 'lbl b', 'start', seg(t, 17.6, 18), 'fill:var(--build)');
+        o += text(pos(10)[0] + 18, chainY - 32, '← end 2', 'lbl b', 'start', seg(t, 17.6, 18), 'fill:var(--build)');
+      }
+      // molecules
+      for (let k = 0; k < 3; k++) {
+        const u = t - 3.2 * k, xt = cx(8 + k);
+        if (u >= 7) { // UDP drifts away
+          if (u < 7.9) o += udpTag(lerp(xt + 11, xt + 40, seg(u, 7, 7.9)), lerp(chainY + 3, chainY - 70, seg(u, 7, 7.9)), 1 - seg(u, 7.3, 7.9));
+          continue;
+        }
+        const P = kf(u, [[0, 70, 150 + 70 * k], [1.0, 150, 300], [1.8, 250, 300], [2.7, 250, 300], [3.2, 380, 300], [4.0, 380, 300], [4.6, 520, 300], [5.6, 520, 300], [6.4, xt - 10, 330], [7.0, xt, chainY]]);
+        let pp = null, udp = false;
+        if (u >= 2.0 && u < 2.6) { const q = ease(seg(u, 2.0, 2.6)); pp = [lerp(250 - P[0], C6[0], q), lerp(225 - P[1], C6[1], q)]; }
+        if (u >= 2.6) pp = 6;
+        if (u >= 3.3) { const q = ease(seg(u, 3.3, 3.9)); pp = [lerp(C6[0], C1[0], q), lerp(C6[1], C1[1], q) - Math.sin(Math.PI * q) * 18]; }
+        if (u >= 3.9) pp = 1;
+        if (u >= 5.2) { pp = null; udp = true; }
+        o += glucose(P[0], P[1], { p: pp, udp });
+        // ATP at hexokinase
+        if (u > 1.2 && u < 3.2) {
+          const op = seg(u, 1.2, 1.5) * (1 - seg(u, 2.8, 3.2));
+          o += `<g opacity="${op}"><rect x="228" y="218" width="44" height="16" rx="8" style="fill:var(--phos-t);stroke:var(--phos)"/>` + text(250, 230, u < 2.0 ? 'ATP' : 'ADP', 'lbl b', 'middle', 1, 'fill:var(--phos);font-size:11px') + '</g>';
+        }
+        // UTP comes in, PPi leaves and splits
+        if (u > 4.4 && u < 5.3) { const q = ease(seg(u, 4.5, 5.2)); o += udpTag(520 + 11, lerp(215, 303, q), seg(u, 4.4, 4.7), 'UTP'); }
+        if (u > 5.2 && u < 6.6) {
+          const q = ease(seg(u, 5.2, 5.9)), sp = ease(seg(u, 5.9, 6.4)), op = 1 - seg(u, 6.3, 6.6);
+          const px = lerp(535, 590, q), py = lerp(300, 200, q);
+          o += phos(px - 7 - sp * 14, py, op) + phos(px + 7 + sp * 14, py, op);
+          if (sp < .2) o += line(px - 4, py, px + 4, py, 'bond', op, 'stroke:var(--phos)');
+          o += text(px, py - 16, sp > .5 ? '2 Pi' : 'PPi', 'lbl b', 'middle', op, 'fill:var(--phos)');
+        }
+      }
+      return o;
+    }
+  };
+
+  // ---------- Scene 2: glycogenolysis ----------
+  const B = {
+    dur: 20, col: 'break', title: 'Glycogenolysis — breaking glycogen down',
+    steps: [
+      [0, 1.0, 'Go', 'Fasting or exercise: it is time to spend the glucose savings.'],
+      [1.0, 3.6, '1', 'Glycogen phosphorylase snips glucose off the chain ends using phosphate (Pi), not water → glucose-1-phosphate. No ATP is spent.'],
+      [3.6, 7.6, '1', 'Phosphorylase stops when 4 glucose are left before a branch point. It cannot get any closer.'],
+      [7.6, 9.6, '2a', 'Debranching enzyme (transferase job) moves 3 of those 4 glucose onto the end of another chain.'],
+      [9.6, 10.6, '2b', 'The same enzyme (α-1,6-glucosidase job) cuts the last glucose at the branch point. It comes off as FREE glucose, with no phosphate.'],
+      [10.6, 12, '1', 'The chain is straight again, so phosphorylase keeps going.'],
+      [12, 14, '3', 'Phosphoglucomutase moves the phosphate from carbon 1 to carbon 6 → glucose-6-phosphate.'],
+      [14, 20, '4', 'LIVER: glucose-6-phosphatase removes the phosphate and glucose goes out to the blood. MUSCLE: has no glucose-6-phosphatase, so G6P stays inside and is burned in glycolysis for ATP.'],
+    ],
+    render(t) {
+      let o = '';
+      const y0 = 380, yb = 344, x0 = 96, dx = 26, cx = i => x0 + i * dx, bxp = j => cx(2) + j * dx;
+      o += text(30, 50, 'GLYCOGEN IN THE CYTOSOL', 'lbl mono');
+      o += `<rect x="61" y="371" width="18" height="18" rx="4" style="fill:var(--udp-t);stroke:var(--udp);stroke-width:1.6"/>` + text(70, 412, 'glycogenin', 'lbl', 'middle');
+      o += pill(170, 462, 'Glycogen phosphorylase', 'break', (t > 1 && t < 7.6) || (t > 10.6 && t < 12), 1, '1');
+      o += pill(170, 505, 'Debranching enzyme', 'break', t > 7.6 && t < 10.6, 1, '2');
+      o += pill(560, 372, 'Phospho-\nglucomutase', 'break', t > 12 && t < 14, 1, '3');
+      // which units exist when
+      const mainGone = i => (i === 9 && t >= 1.0 && t < 8.2) || (i === 8 && t >= 2.1 && t < 8.2) || (i === 7 && t >= 3.2 && t < 8.2) || (i === 9 && t >= 11.2);
+      const brGone = j => (j === 5 && t >= 4.4) || (j === 4 && t >= 5.5) || (j >= 1 && j <= 3 && t >= 9.4) || (j === 0 && t >= 9.6);
+      // main chain
+      o += line(79, y0, cx(0) - 11, y0);
+      for (let i = 1; i < 10; i++) if (!mainGone(i) && !mainGone(i - 1) && !(i >= 7 && t >= 8.2 && t < 9.4)) o += line(cx(i - 1), y0, cx(i), y0);
+      for (let i = 0; i < 10; i++) if (!mainGone(i) && !(i >= 7 && t >= 3.2 && t < 9.4)) o += hex(cx(i), y0);
+      // branch
+      if (!brGone(0)) o += line(cx(2), y0 - 11, bxp(0), yb + 11);
+      for (let j = 1; j < 6; j++) if (!brGone(j) && !brGone(j - 1) && !(t > 8.0 && j <= 3)) o += line(bxp(j - 1), yb, bxp(j), yb);
+      for (let j = 0; j < 6; j++) if (!brGone(j) && !(j >= 1 && j <= 3 && t >= 8.0)) o += hex(bxp(j), yb, 11, t > 6.6 && t < 8.0 ? 'hl' : '');
+      o += text(cx(2) - 14, y0 - 20, 'α-1,6', 'lbl b', 'end', brGone(0) ? 0 : 1);
+      // "4 left" bracket
+      if (t > 6.6 && t < 8.1) {
+        const op = seg(t, 6.6, 6.9) * (1 - seg(t, 7.8, 8.1));
+        o += `<path d="M${bxp(0) - 11} ${yb - 20} v-8 h${3 * dx + 22} v8" style="fill:none;stroke:var(--break);stroke-width:2" opacity="${op}"/>` + text(bxp(1) + 13, yb - 36, '4 glucose left: phosphorylase stops', 'lbl b', 'middle', op, 'fill:var(--break)');
+      }
+      // transferase moves 3 units (branch j=1..3 -> main i=7..9)
+      if (t >= 8.0 && t < 9.4) {
+        const q = ease(seg(t, 8.0, 9.4));
+        for (let j = 1; j <= 3; j++) { const x = lerp(bxp(j), cx(6 + j), q), y = lerp(yb, y0, q) - Math.sin(Math.PI * q) * 50; o += hex(x, y, 11, 'hl'); }
+      }
+      // free glucose leaves
+      if (t >= 9.6) {
+        const q = ease(seg(t, 9.6, 10.4)), gone = seg(t, 12, 14);
+        const fx = lerp(lerp(bxp(0), 470, q), 760, ease(seg(t, 14, 16))), fy = lerp(lerp(yb, 240, q), 150, ease(seg(t, 14, 16)));
+        if (t < 17.5) o += hex(fx, fy, 11, 'free');
+        else { const r = ease(seg(t, 17.5, 19)); o += hex(lerp(760, 912, r), lerp(150, 120, r) + (t > 19 ? 0 : 0), 11, 'free'); }
+        o += text(470, 268, 'free glucose', 'lbl', 'middle', q * (1 - gone));
+      }
+      // right-hand panels
+      const pv = seg(t, 13.5, 14.2);
+      o += `<g opacity="${pv}">`;
+      o += `<rect x="690" y="60" width="250" height="200" rx="14" style="fill:var(--panel);stroke:var(--break);stroke-width:1.5"/>` + text(706, 84, 'IF THIS IS A LIVER CELL', 'lbl mono');
+      o += `<rect x="890" y="70" width="40" height="180" rx="12" style="fill:var(--blood-t);stroke:var(--blood);stroke-opacity:.5"/>` + text(910, 238, 'blood', 'lbl', 'middle');
+      o += pill(790, 222, 'Glucose-6-phosphatase', 'break', t > 16 && t < 17.2);
+      o += `<rect x="690" y="290" width="250" height="220" rx="14" style="fill:var(--panel);stroke:var(--line);stroke-width:1.5"/>` + text(706, 314, 'IF THIS IS A MUSCLE CELL', 'lbl mono');
+      o += text(706, 336, 'no glucose-6-phosphatase ✗', 'lbl', 'start', 1, 'fill:var(--blood)');
+      o += arrow(800, 440, 872, 440, 'break') + text(836, 462, 'glycolysis', 'lbl b', 'middle');
+      o += arrow(640, 300, 686, 170, 'muted', 1, '5 4') + arrow(640, 300, 686, 400, 'muted', 1, '5 4') + '</g>';
+      // phosphorylase (pac-man)
+      if (t > 0.3 && !(t > 7.6 && t < 10.4)) {
+        const pk = kf(t, [[0.3, 420, y0], [0.9, cx(9) + 24, y0], [1.4, cx(9) + 24, y0], [2.0, cx(8) + 24, y0], [2.5, cx(8) + 24, y0], [3.1, cx(7) + 24, y0], [3.7, cx(7) + 24, y0], [4.3, bxp(5) + 24, yb], [5.0, bxp(5) + 24, yb], [5.4, bxp(4) + 24, yb], [6.1, bxp(4) + 24, yb], [6.6, bxp(3) + 24, yb], [10.4, bxp(3) + 24, yb], [10.9, cx(9) + 24, y0]]);
+        const shake = t > 6.6 && t < 7.6 ? Math.sin(t * 40) * 2 : 0;
+        const mouth = 0.15 + 0.35 * Math.abs(Math.sin(t * 5));
+        const r = 14, a = mouth * Math.PI / 2;
+        const x = pk[0] + shake, y = pk[1];
+        o += `<path d="M${f1(x)} ${f1(y)} L${f1(x - r * Math.cos(a))} ${f1(y - r * Math.sin(a))} A${r} ${r} 0 1 1 ${f1(x - r * Math.cos(a))} ${f1(y + r * Math.sin(a))} Z" style="fill:var(--break)"/>`;
+        o += `<circle cx="${f1(x + 2)}" cy="${f1(y - 7)}" r="2" style="fill:var(--panel)"/>`;
+      }
+      // G1P pool: n-th product released at tRel from source position
+      const rel = [[1.0, cx(9), y0], [2.1, cx(8), y0], [3.2, cx(7), y0], [4.4, bxp(5), yb], [5.5, bxp(4), yb], [11.2, cx(9), y0]];
+      o += text(490, 110, 'glucose-1-phosphate', 'lbl', 'middle', seg(t, 1.2, 1.6) * (1 - seg(t, 12, 12.6)));
+      rel.forEach(([tr, sx, sy], n) => {
+        if (t < tr) return;
+        // Pi arrives just before the snip
+        const slot = [455 + (n % 3) * 34, 140 + Math.floor(n / 3) * 34];
+        const mut = [548 + (n % 2) * 28 - 14, 250 + Math.floor(n / 2) * 26 - 30];
+        const dest = n % 2 === 0 ? [770 + (n / 2) * 30, 150] : [770 + ((n - 1) / 2) * 30, 420];
+        let P = kf(t, [[tr, sx, sy], [tr + 0.8, slot[0], slot[1]], [12, slot[0], slot[1]], [13, mut[0], mut[1]], [14, mut[0], mut[1]], [16, dest[0], dest[1]]]);
+        let pp = 1, op = 1;
+        const hop = ease(seg(t, 13.1, 13.7));
+        if (t > 13.1) pp = hop < 1 ? [lerp(C1[0], C6[0], hop), lerp(C1[1], C6[1], hop) - Math.sin(Math.PI * hop) * 16] : 6;
+        if (n % 2 === 0 && t > 16) { // liver: P removed, glucose out to blood
+          const rm = ease(seg(t, 16, 16.8));
+          if (rm < 1) o += phos(P[0] + C6[0], P[1] + C6[1] - rm * 30, 1 - rm);
+          pp = null;
+          const out = ease(seg(t, 17.5, 19));
+          P = [lerp(P[0], 912, out), lerp(P[1], 110 + n * 16, out)];
+        }
+        if (n % 2 === 1 && t > 16.2) { const q = ease(seg(t, 16.2, 17.4)); P = [lerp(P[0], 850, q), lerp(P[1], 440, q)]; op = 1 - seg(t, 17, 17.5); }
+        if (op > 0) o += glucose(P[0], P[1], { p: pp, op });
+      });
+      // incoming Pi before each snip
+      rel.forEach(([tr, sx, sy]) => { if (t > tr - 0.5 && t < tr) { const q = ease(seg(t, tr - 0.5, tr)); o += phos(lerp(sx + 30, sx + 12, q), lerp(sy + 40, sy + 4, q), q); } });
+      if (t > 17.4) for (let k = 0; k < 3; k++) {
+        const s = ease(seg(t, 17.4 + k * .35, 17.9 + k * .35));
+        o += `<g opacity="${s}"><rect x="${880 + (k % 2) * 8 - 24}" y="${372 + k * 34 - 25}" width="48" height="20" rx="10" style="fill:var(--build-t);stroke:var(--build)"/>` + text(880 + (k % 2) * 8, 372 + k * 34 - 11, 'ATP', 'lbl b', 'middle', 1, 'fill:var(--build)') + '</g>';
+      }
+      if (t > 18) o += text(815, 495, 'energy for muscle contraction', 'lbl', 'middle', seg(t, 18, 18.5));
+      if (t > 18.6) o += text(790, 110, 'blood glucose goes up ↑', 'lbl b', 'middle', seg(t, 18.6, 19), 'fill:var(--blood)');
+      return o;
+    }
+  };
+
+  // ---------- Scene 3: hormone switch ----------
+  // glycogen particle: 3 primary chains of 4, each forking into 2 chains of 3
+  const tree = (() => {
+    const u = [], cx = 800, cy = 400, d = 15;
+    [-90, 30, 150].forEach(a0 => {
+      let px = cx, py = cy, parent = -1, a = a0 * Math.PI / 180;
+      for (let i = 1; i <= 4; i++) { const x = cx + Math.cos(a) * d * i, y = cy + Math.sin(a) * d * i; u.push({ x, y, px, py, depth: i }); px = x; py = y; }
+      const bx = px, by = py;
+      [-38, 38].forEach(da => { let qx = bx, qy = by; const b = (a0 + da) * Math.PI / 180; for (let i = 1; i <= 3; i++) { const x = bx + Math.cos(b) * d * i, y = by + Math.sin(b) * d * i; u.push({ x, y, px: qx, py: qy, depth: 4 + i }); qx = x; qy = y; } });
+    });
+    return u.sort((p, q) => p.depth - q.depth);
+  })();
+  const C = {
+    dur: 16, col: 'phos', title: 'The hormone switch — who decides build or break?',
+    steps: [
+      [0, 1.5, 'Fed', 'You eat a meal. Blood glucose rises.'],
+      [1.5, 2.5, 'Fed', 'β-cells in the pancreas release insulin.'],
+      [2.5, 4, 'Fed', 'Insulin binds its receptor → PKB (Akt) is switched on. PKB turns GSK3 OFF, and PP1 is turned ON.'],
+      [4, 5.5, 'Fed', 'PP1 pulls the phosphates OFF both enzymes: glycogen synthase turns ON, glycogen phosphorylase turns OFF.'],
+      [5.5, 8, 'Fed', 'Glucose is packed into glycogen, and blood glucose returns to normal.'],
+      [8, 9, 'Fast', 'Hours later (or when you exercise), blood glucose falls.'],
+      [9, 10.5, 'Fast', 'α-cells release glucagon, which acts on the liver. Adrenaline does the same job in liver and muscle.'],
+      [10.5, 12, 'Fast', 'Receptor → G protein → cAMP → PKA → phosphorylase kinase. Each step multiplies the signal, so one hormone molecule frees thousands of glucose.'],
+      [12, 13.5, 'Fast', 'Phosphates go ON both enzymes: phosphorylase turns ON, synthase turns OFF.'],
+      [13.5, 16, 'Fast', 'Glycogen is broken down and glucose goes back into the blood.'],
+    ],
+    render(t) {
+      let o = '';
+      const fed = t < 8;
+      // pancreas islet
+      o += text(40, 50, 'PANCREAS (ISLET)', 'lbl mono');
+      o += `<circle cx="130" cy="150" r="66" style="fill:var(--panel);stroke:var(--line);stroke-width:1.5"/>`;
+      for (let i = 0; i < 14; i++) { const a = i * 2.4, r = 18 + (i * 13) % 40; const beta = i % 3 !== 0; o += `<circle cx="${f1(130 + Math.cos(a) * r)}" cy="${f1(150 + Math.sin(a) * r)}" r="7" style="fill:var(--${beta ? 'build' : 'break'}-t);stroke:var(--${beta ? 'build' : 'break'})"/>`; }
+      o += text(130, 238, 'β-cells: insulin   α-cells: glucagon', 'lbl', 'middle', 1, 'font-size:11px');
+      // gauge
+      const g = t < 1.5 ? lerp(4.2, 8.5, ease(seg(t, 0, 1.5))) : t < 5.5 ? 8.5 : t < 8 ? lerp(8.5, 5.2, ease(seg(t, 5.5, 8))) : t < 9 ? lerp(5.2, 3.8, ease(seg(t, 8, 9))) : t < 13.5 ? 3.8 : lerp(3.8, 4.2 + .8, ease(seg(t, 13.5, 16)));
+      const gx = 130, gy = 420, gr = 78;
+      o += text(40, 305, 'BLOOD GLUCOSE', 'lbl mono');
+      const arc = (v1, v2, col) => { const a1 = Math.PI * (1 - v1 / 12), a2 = Math.PI * (1 - v2 / 12); return `<path d="M${f1(gx + gr * Math.cos(a1))} ${f1(gy - gr * Math.sin(a1))} A${gr} ${gr} 0 0 1 ${f1(gx + gr * Math.cos(a2))} ${f1(gy - gr * Math.sin(a2))}" style="fill:none;stroke:var(--${col});stroke-width:12"/>`; };
+      o += arc(0, 4, 'break') + arc(4, 7.8, 'line') + arc(7.8, 12, 'build');
+      const na = Math.PI * (1 - g / 12);
+      o += `<line x1="${gx}" y1="${gy}" x2="${f1(gx + (gr - 16) * Math.cos(na))}" y2="${f1(gy - (gr - 16) * Math.sin(na))}" style="stroke:var(--ink);stroke-width:3;stroke-linecap:round"/><circle cx="${gx}" cy="${gy}" r="5" style="fill:var(--ink)"/>`;
+      o += `<text x="${gx}" y="${gy + 30}" text-anchor="middle" style="fill:var(--ink);font:700 22px var(--mono)">${g.toFixed(1)}</text>` + text(gx, gy + 48, 'mmol/L', 'lbl', 'middle');
+      o += text(gx - gr, gy + 16, 'low', 'lbl', 'middle') + text(gx + gr, gy + 16, 'high', 'lbl', 'middle');
+      // phase title
+      const fedOp = fed ? 1 - seg(t, 7.6, 8) : 0, fastOp = fed ? 0 : seg(t, 8, 8.4);
+      o += `<text x="300" y="56" style="fill:var(--build);font:800 20px var(--display)" opacity="${fedOp}">FED · insulin</text>`;
+      o += `<text x="300" y="56" style="fill:var(--break);font:800 20px var(--display)" opacity="${fastOp}">FASTING · glucagon, adrenaline</text>`;
+      if (t < 1.6) o += text(300, 84, 'After a meal', 'lbl b', 'start', seg(t, 0, .4) * (1 - seg(t, 1.3, 1.6)), 'font-size:16px');
+      if (t > 8 && t < 9.4) o += text(300, 84, '5 hours later…', 'lbl b', 'start', seg(t, 8, 8.3) * (1 - seg(t, 9.1, 9.4)), 'font-size:16px');
+      // cascades
+      const casc = (items, col, t0, op) => {
+        let s = `<g opacity="${op}">`;
+        items.forEach((it, i) => {
+          const y = 130 + i * 72, on = t > t0 + i * 0.35;
+          s += pill(470, y, it, col, on);
+          if (i) s += arrow(470, y - 50, 470, y - 22, on ? col : 'line');
+        });
+        return s + '</g>';
+      };
+      o += casc(['Insulin', 'Insulin receptor\n(tyrosine kinase)', 'PKB / Akt', 'GSK3 OFF · PP1 ON'], 'build', 2.4, fedOp);
+      o += casc(['Glucagon / adrenaline', 'Receptor + G protein', 'cAMP ↑ → PKA', 'Phosphorylase kinase'], 'break', 10.4, fastOp);
+      // hormone particles
+      if (t > 1.5 && t < 2.8) for (let i = 0; i < 6; i++) { const q = ease(seg(t, 1.5 + i * .08, 2.5 + i * .05)); o += `<circle cx="${f1(lerp(150, 430, q))}" cy="${f1(lerp(140 + i * 6, 130, q))}" r="4" style="fill:var(--build)" opacity="${1 - seg(t, 2.5, 2.8)}"/>`; }
+      if (t > 9 && t < 10.8) for (let i = 0; i < 6; i++) { const q = ease(seg(t, 9 + i * .08, 10.2 + i * .05)); o += `<circle cx="${f1(lerp(120, 410, q))}" cy="${f1(lerp(140 + i * 6, 130, q))}" r="4" style="fill:var(--break)" opacity="${1 - seg(t, 10.3, 10.8)}"/>`; }
+      if (t > 10.9 && t < 12.2) for (let i = 0; i < 18; i++) { const q = seg(t, 10.9, 12.2); o += `<circle cx="${f1(560 + (i % 6) * 12 + Math.sin(i + t * 3) * 3)}" cy="${f1(262 + Math.floor(i / 6) * 12)}" r="3" style="fill:var(--break)" opacity="${Math.min(1, q * 4) * (1 - seg(t, 11.8, 12.2))}"/>`; }
+      if (t > 10.9 && t < 12.2) o += text(600, 312, 'amplified!', 'lbl b', 'middle', 1 - seg(t, 11.8, 12.2), 'fill:var(--break)');
+      // enzymes
+      const pOn = t < 4 ? 1 : t < 5.5 ? 1 - ease(seg(t, 4, 5.5)) : t < 12 ? 0 : ease(seg(t, 12, 13.5));
+      const synthOn = pOn < .5, phosOn = pOn >= .5;
+      const enz = (y, name, on, col) => {
+        let s = `<rect x="690" y="${y - 26}" width="220" height="52" rx="12" style="fill:${on ? `var(--${col}-t)` : 'var(--panel)'};stroke:${on ? `var(--${col})` : 'var(--line)'};stroke-width:1.8"/>`;
+        s += `<text x="706" y="${y - 4}" style="fill:var(--ink);font:700 14px var(--body)">${name}</text>`;
+        s += `<text x="706" y="${y + 15}" style="fill:${on ? `var(--${col})` : 'var(--muted)'};font:700 12px var(--mono)">${on ? 'ON ● active' : 'OFF ○ inactive'}</text>`;
+        return s;
+      };
+      o += text(690, 50, 'THE TWO KEY ENZYMES', 'lbl mono');
+      o += enz(100, 'Glycogen synthase', synthOn, 'build') + enz(180, 'Glycogen phosphorylase', phosOn, 'break');
+      // phosphate balls: attached at pOn=1, flying off/on
+      [[100, 0], [180, 1]].forEach(([y], idx) => {
+        const ax = 920, ay = y - 22;
+        let x, yy, op;
+        if (t < 8) { x = lerp(ax, ax + 30, 1 - pOn); yy = lerp(ay, ay - 40, 1 - pOn); op = pOn; }
+        else { x = lerp(560, ax, pOn); yy = lerp(420, ay, pOn); op = pOn > 0 ? 1 : 0; }
+        if (op > 0.02) o += phos(x, yy, op, 9);
+      });
+      // glycogen particle
+      const nUnits = t < 5.5 ? 14 : t < 8 ? Math.round(lerp(14, 30, seg(t, 5.5, 7.8))) : t < 13.5 ? 30 : Math.round(lerp(30, 14, seg(t, 13.5, 15.8)));
+      o += text(690, 262, 'GLYCOGEN PARTICLE', 'lbl mono');
+      tree.slice(0, nUnits).forEach(u => o += line(u.px, u.py, u.x, u.y, 'bond'));
+      o += `<rect x="793" y="393" width="14" height="14" rx="3" style="fill:var(--udp-t);stroke:var(--udp)"/>`;
+      tree.slice(0, nUnits).forEach(u => o += hex(u.x, u.y, 7));
+      o += text(800, 530, 'a real particle holds up to ~55,000 glucose', 'lbl', 'middle', 1, 'font-size:11px');
+      if (t > 5.5 && t < 8) o += arrow(640, 470, 700, 430, 'build', 1 - seg(t, 7.6, 8)) + text(620, 490, 'glucose in', 'lbl b', 'middle', 1, 'fill:var(--build)');
+      if (t > 13.5) o += arrow(700, 430, 640, 470, 'break', seg(t, 13.5, 13.9)) + text(620, 490, 'glucose out', 'lbl b', 'middle', seg(t, 13.5, 13.9), 'fill:var(--break)');
+      return o;
+    }
+  };
+
+  // ---------- player ----------
+  const scenes = { build: A, break: B, switch: C };
+  const stage = document.getElementById('stage');
+  const capTag = document.getElementById('cap-tag'), capText = document.getElementById('cap-text');
+  const stepsEl = document.getElementById('steps'), stepsTitle = document.getElementById('steps-title');
+  const playBtn = document.getElementById('play'), scrub = document.getElementById('scrub'), clock = document.getElementById('clock'), slowBtn = document.getElementById('slow');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur = 'build', t = 0, playing = false, last = 0, speed = 1;
+
+  function stepAt(sc, time) { let k = 0; sc.steps.forEach((s, i) => { if (time >= s[0]) k = i; }); return k; }
+  function draw() {
+    const sc = scenes[cur];
+    stage.innerHTML = sc.render(t);
+    const k = stepAt(sc, t), s = sc.steps[k];
+    const tag = /^\d/.test(s[2]) ? 'Step ' + s[2] : s[2] === 'Fed' ? 'Fed state' : s[2] === 'Fast' ? 'Fasting state' : s[2] === 'In' ? 'Getting in' : 'Start';
+    if (capText.dataset.k !== cur + k) { capText.textContent = s[3]; capTag.textContent = tag + ' · ' + sc.title; capText.dataset.k = cur + k; [...stepsEl.children].forEach((li, i) => li.firstChild.classList.toggle('on', i === k)); }
+    scrub.value = t; clock.textContent = t.toFixed(1) + ' s';
+  }
+  function load(name) {
+    cur = name; t = 0; const sc = scenes[name];
+    document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === name ? 'true' : 'false'));
+    const colVar = `--c:var(--${sc.col});--ct:var(--${sc.col}-t)`;
+    stepsTitle.textContent = sc.title;
+    stepsEl.innerHTML = sc.steps.map((s, i) => `<li><button class="step" style="${colVar}" data-t="${s[0]}"><span class="n">${esc(s[2])}</span><span>${esc(s[3])}</span></button></li>`).join('');
+    stepsEl.querySelectorAll('.step').forEach(b => b.onclick = () => { t = +b.dataset.t + 0.01; draw(); });
+    scrub.max = sc.dur; capText.dataset.k = ''; draw();
+    try { localStorage.setItem('glycogen-scene', name); } catch (e) {}
+  }
+  function tick(now) {
+    if (!playing) return;
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    t += dt * speed;
+    if (t > scenes[cur].dur) t = 0;
+    draw(); requestAnimationFrame(tick);
+  }
+  function setPlaying(p) { playing = p; playBtn.textContent = p ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', p); if (p) { last = performance.now(); requestAnimationFrame(tick); } }
+  playBtn.onclick = () => setPlaying(!playing);
+  document.getElementById('restart').onclick = () => { t = 0; draw(); };
+  slowBtn.onclick = () => { speed = speed === 1 ? 0.5 : 1; slowBtn.setAttribute('aria-pressed', speed !== 1); };
+  scrub.oninput = () => { t = +scrub.value; draw(); };
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => load(b.dataset.scene));
+  // hook for exporting frames (used to make the GIF/MP4 versions)
+  window.__glyco = { render: (name, time) => { if (cur !== name) load(name); t = time; draw(); }, scenes: Object.fromEntries(Object.entries(scenes).map(([k, v]) => [k, v.dur])) };
+  let start = 'build'; try { const s = localStorage.getItem('glycogen-scene'); if (scenes[s]) start = s; } catch (e) {}
+  if (location.hash && scenes[location.hash.slice(1)]) start = location.hash.slice(1);
+  load(start); t = 0.01; draw();
+  if (!reduce) setPlaying(true);
+})();
+</script>

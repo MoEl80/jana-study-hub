@@ -15,6 +15,8 @@
     links: [
       { title: 'BIOL214 Moodle site (lectures, practicals, exam info)', href: 'https://moodle.uowplatform.edu.au/' },
       { title: 'BIOL214 Handbook page (2026)', href: 'https://courses.uow.edu.au/subjects/2026/BIOL214' },
+      { title: 'Glycogen study pack: glycogenesis & glycogenolysis (PDF, 23 pages)', href: 'study-packs/biol214/glycogen/Glycogenesis-and-Glycogenolysis.pdf' },
+      { title: 'Glycogen in motion: animations of glycogenesis, glycogenolysis and the hormone switch', href: 'study-packs/biol214/glycogen/glycogen-animations.html' },
       { title: 'Lecture notes + practicals on the home PC', href: 'file:///C:/AI/Jana-GLM/Subjects/01%20-%20BIOL214%20-%20Biochemistry%20of%20Energy%20and%20Metabolism/Lectures' }
     ]
   };
